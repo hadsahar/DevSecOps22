@@ -1,0 +1,176 @@
+---
+layout: default
+title: Linux Homework (Random 20 Questions)
+---
+
+<h1>Linux Homework (Random 20 Questions)</h1>
+
+<p>Click <strong>Generate</strong> to get a fresh set of 20 questions (easy to extremely hard).</p>
+
+<div style="display:flex; gap:12px; flex-wrap:wrap; margin:16px 0;">
+  <button id="generateBtn" style="padding:10px 14px; border-radius:10px; border:1px solid #334155; background:#111827; color:#f1f5f9; cursor:pointer;">Generate 20 Questions</button>
+  <button id="copyBtn" style="padding:10px 14px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#f1f5f9; cursor:pointer;">Copy as Text</button>
+</div>
+
+<div id="meta" style="color:#cbd5e1; margin: 6px 0 18px;"></div>
+
+<ol id="questions" style="padding-left: 22px;"></ol>
+
+<script>
+(function () {
+  const bank = [
+    { d: 'Easy', q: 'What command shows your current working directory?' },
+    { d: 'Easy', q: 'What command lists files (basic listing) in the current directory?' },
+    { d: 'Easy', q: 'What is the difference between relative and absolute paths? Give one example of each.' },
+    { d: 'Easy', q: 'How do you create an empty file named hello.txt?' },
+    { d: 'Easy', q: 'How do you create a directory named projects?' },
+    { d: 'Easy', q: 'What command shows the contents of a text file?' },
+    { d: 'Easy', q: 'How do you move to your home directory from anywhere?' },
+    { d: 'Easy', q: 'What does sudo do?' },
+    { d: 'Easy', q: 'What is the purpose of man pages and how do you open them?' },
+    { d: 'Easy', q: 'What is the difference between rm and rmdir?' },
+
+    { d: 'Medium', q: 'Explain the output of ls -l (permissions, owner, group, size, timestamp, name).' },
+    { d: 'Medium', q: 'What is standard input/output/error and how do you redirect them?' },
+    { d: 'Medium', q: 'Write a command that finds all .log files under /var/log.' },
+    { d: 'Medium', q: 'How do you search for a word inside a file (case-insensitive)?' },
+    { d: 'Medium', q: 'How do you view running processes and then filter for nginx?' },
+    { d: 'Medium', q: 'Explain the difference between a hard link and a symbolic link.' },
+    { d: 'Medium', q: 'What does chmod 755 mean? Explain in both numeric and symbolic terms.' },
+    { d: 'Medium', q: 'How do you check disk usage by filesystem and human readable output?' },
+    { d: 'Medium', q: 'How do you check free memory and swap usage?' },
+    { d: 'Medium', q: 'How do you archive and compress a directory (tar.gz)? Provide an example.' },
+
+    { d: 'Hard', q: 'Given a service name (e.g. ssh), show how to check its status, start it, stop it, and enable it at boot using systemctl.' },
+    { d: 'Hard', q: 'How do you view logs for a systemd service using journalctl (last 100 lines and follow mode)?' },
+    { d: 'Hard', q: 'Write a command to find files larger than 100MB under /home without permission errors flooding the output.' },
+    { d: 'Hard', q: 'Explain what PATH is and demonstrate how you would temporarily add ~/mybin to PATH.' },
+    { d: 'Hard', q: 'What is a cron job? Write an example cron entry that runs a script every day at 03:15.' },
+    { d: 'Hard', q: 'Explain how Linux permissions work for user/group/others and what umask does.' },
+    { d: 'Hard', q: 'How do you identify which process is listening on port 8080?' },
+    { d: 'Hard', q: 'Explain the difference between TCP and UDP and give two typical use-cases for each.' },
+    { d: 'Hard', q: 'How do you find and replace text in a file using sed (in-place)? Provide an example.' },
+    { d: 'Hard', q: 'Explain what a pipe (|) does and build a pipeline that lists the 10 most frequent words in a file.' },
+
+    { d: 'Very Hard', q: 'A systemd service fails to start. Describe a step-by-step troubleshooting approach (status, logs, config validation, permissions, ports).' },
+    { d: 'Very Hard', q: 'Explain Linux boot targets (systemd targets) and how they map to classic runlevels. How do you change the default target?' },
+    { d: 'Very Hard', q: 'You suspect DNS is broken. Create a diagnostic checklist using ping, ip route, resolvectl, dig/nslookup, and curl.' },
+    { d: 'Very Hard', q: 'Explain how ARP works and how you can inspect neighbors (ARP cache) on Linux.' },
+    { d: 'Very Hard', q: 'Explain what happens when you run: curl https://example.com (DNS, TCP handshake, TLS handshake, HTTP request/response).' },
+    { d: 'Very Hard', q: 'A user reports: “I can ping 8.8.8.8 but cannot ping google.com”. Explain the likely cause and how to verify.' },
+    { d: 'Very Hard', q: 'Explain what file descriptors are and how you would redirect stdout and stderr to separate files.' },
+    { d: 'Very Hard', q: 'Explain what happens when you run apt update and apt install (repositories, indexes, dependency resolution).' },
+
+    { d: 'Extreme', q: 'Design a minimal-hardening checklist for a new Linux server (users, SSH, firewall, updates, logs, least privilege). Include commands.' },
+    { d: 'Extreme', q: 'Write an incident response mini-playbook for “disk full” on a Linux server. Include how to locate top offenders and safe cleanup steps.' },
+    { d: 'Extreme', q: 'Given a compromised machine scenario, list Linux artifacts and commands you would use to investigate (processes, network, persistence, logs).' },
+    { d: 'Extreme', q: 'Explain the difference between routing and switching, then describe what traceroute shows at a protocol level (TTL/ICMP) and how to interpret hops.' }
+  ];
+
+  const targetCounts = {
+    'Easy': 6,
+    'Medium': 5,
+    'Hard': 4,
+    'Very Hard': 3,
+    'Extreme': 2
+  };
+
+  const elList = document.getElementById('questions');
+  const elMeta = document.getElementById('meta');
+  const btnGen = document.getElementById('generateBtn');
+  const btnCopy = document.getElementById('copyBtn');
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function pickQuestions() {
+    const byDiff = bank.reduce((acc, item) => {
+      (acc[item.d] = acc[item.d] || []).push(item);
+      return acc;
+    }, {});
+
+    const selected = [];
+    for (const diff of Object.keys(targetCounts)) {
+      const items = shuffle((byDiff[diff] || []).slice());
+      selected.push(...items.slice(0, targetCounts[diff]));
+    }
+
+    return shuffle(selected).slice(0, 20);
+  }
+
+  function render() {
+    const selected = pickQuestions();
+    elList.innerHTML = '';
+
+    selected.forEach((item) => {
+      const li = document.createElement('li');
+      li.style.margin = '10px 0 14px';
+
+      const badge = document.createElement('span');
+      badge.textContent = item.d;
+      badge.style.display = 'inline-block';
+      badge.style.padding = '2px 10px';
+      badge.style.marginRight = '10px';
+      badge.style.borderRadius = '999px';
+      badge.style.border = '1px solid #334155';
+      badge.style.color = '#f1f5f9';
+      badge.style.background = '#0b1220';
+      badge.style.fontSize = '12px';
+      badge.style.verticalAlign = 'middle';
+
+      const text = document.createElement('span');
+      text.textContent = item.q;
+      text.style.color = '#cbd5e1';
+
+      li.appendChild(badge);
+      li.appendChild(text);
+      elList.appendChild(li);
+    });
+
+    const now = new Date();
+    elMeta.textContent = 'Generated: ' + now.toLocaleString();
+  }
+
+  function exportAsText() {
+    const lines = [];
+    lines.push('Linux Homework (Random 20 Questions)');
+    lines.push('');
+
+    const items = elList.querySelectorAll('li');
+    items.forEach((li, idx) => {
+      const diff = li.querySelector('span') ? li.querySelector('span').textContent : '';
+      const q = li.textContent.replace(diff, '').trim();
+      lines.push((idx + 1) + '. [' + diff + '] ' + q);
+    });
+
+    return lines.join('\n');
+  }
+
+  btnGen.addEventListener('click', render);
+
+  btnCopy.addEventListener('click', async () => {
+    const text = exportAsText();
+    try {
+      await navigator.clipboard.writeText(text);
+      btnCopy.textContent = 'Copied!';
+      setTimeout(() => (btnCopy.textContent = 'Copy as Text'), 1200);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btnCopy.textContent = 'Copied!';
+      setTimeout(() => (btnCopy.textContent = 'Copy as Text'), 1200);
+    }
+  });
+
+  render();
+})();
+</script>
