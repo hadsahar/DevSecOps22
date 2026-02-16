@@ -525,6 +525,9 @@ body {
     <button class="nav-tab" onclick="showSection('python')">
       <span class="nav-icon">🐍</span>Python
     </button>
+    <button class="nav-tab" onclick="showSection('homeworks')">
+      <span class="nav-icon">📝</span>Homework
+    </button>
     <button class="nav-tab" onclick="showSection('coming-soon')">
       <span class="nav-icon">🚀</span>Coming Soon
     </button>
@@ -701,6 +704,43 @@ body {
           <span class="tag">automation</span>
           <span class="tag">scripting</span>
           <span class="tag">devops</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Homeworks Section -->
+<div id="homeworks" class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">📝 Homeworks</h2>
+      <p class="section-description">Practice with randomly generated questions from easy to extremely hard</p>
+    </div>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📝</div>
+          <h3 class="card-title">Linux Homework</h3>
+        </div>
+        <p class="card-description">Generate 20 random Linux questions (easy to extremely hard) and copy them as text</p>
+        <ul class="content-list">
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">Linux Homework (Random 20 Questions)</span>
+              <span class="item-badge">Practice</span>
+            </div>
+            <p class="item-description">A new set of questions is generated each time you open the page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}/homeworks/linux-homework/" class="item-link">📝 Open Homework</a>
+            </div>
+          </li>
+        </ul>
+        <div class="tags">
+          <span class="tag">practice</span>
+          <span class="tag">linux</span>
+          <span class="tag">commands</span>
         </div>
       </div>
     </div>
