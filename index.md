@@ -522,6 +522,9 @@ body {
     <button class="nav-tab active" onclick="showSection('linux')">
       <span class="nav-icon">🐧</span>Linux
     </button>
+    <button class="nav-tab" onclick="showSection('git')">
+      <span class="nav-icon">🌿</span>Git
+    </button>
     <button class="nav-tab" onclick="showSection('python')">
       <span class="nav-icon">🐍</span>Python
     </button>
@@ -663,6 +666,143 @@ body {
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Git Section -->
+<div id="git" class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">🌿 Git Fundamentals</h2>
+      <p class="section-description">Learn version control, collaboration, and Git workflows</p>
+    </div>
+
+    {% assign git_lessons = site.pages | where_exp: "p", "p.url contains '/GIT/lessons/'" | sort: "url" %}
+    {% assign git_labs = site.pages | where_exp: "p", "p.url contains '/GIT/labs/'" | sort: "url" %}
+    {% assign git_pdfs = site.static_files | where_exp: "f", "f.path contains '/GIT/PDF/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+
+    <div class="grid">
+      <!-- Git Lessons Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">Lessons</h3>
+        </div>
+        <p class="card-description">Step-by-step lessons to understand Git concepts and commands</p>
+
+        <ul class="content-list">
+          {% if git_lessons | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Git lessons published yet</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Add Jekyll front matter to Git lesson markdown files to make them appear here</p>
+          </li>
+          {% endif %}
+
+          {% for p in git_lessons %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ p.title | escape }}</span>
+              <span class="item-badge">Lesson</span>
+            </div>
+            <p class="item-description">Open the lesson page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📖 Start Lesson</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">version-control</span>
+          <span class="tag">workflow</span>
+          <span class="tag">collaboration</span>
+        </div>
+      </div>
+
+      <!-- Git Labs Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🔬</div>
+          <h3 class="card-title">Labs</h3>
+        </div>
+        <p class="card-description">Hands-on tasks to practice Git locally and with remotes</p>
+
+        <ul class="content-list">
+          {% if git_labs | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Git labs published yet</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Create Git labs under GIT/labs with front matter to list them here</p>
+          </li>
+          {% endif %}
+
+          {% for p in git_labs %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ p.title | escape }}</span>
+              <span class="item-badge">Lab</span>
+            </div>
+            <p class="item-description">Open the lab page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">🧪 Start Lab</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">practice</span>
+          <span class="tag">branching</span>
+          <span class="tag">merge</span>
+        </div>
+      </div>
+
+      <!-- Git PDFs Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📄</div>
+          <h3 class="card-title">PDF Resources</h3>
+        </div>
+        <p class="card-description">Downloadable Git PDFs for offline learning</p>
+
+        <ul class="content-list">
+          {% if git_pdfs | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Git PDFs found</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Add PDFs to GIT/PDF to list them here</p>
+          </li>
+          {% endif %}
+
+          {% for f in git_pdfs %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
+              <span class="item-badge">PDF</span>
+            </div>
+            <p class="item-description">Download PDF</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">⬇️ Download PDF</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">pdf</span>
+          <span class="tag">offline</span>
+          <span class="tag">printable</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
