@@ -11,7 +11,12 @@ DevSecOps-22/
 │   ├── labs/         # Hands-on lab exercises
 │   ├── cheatsheets/  # Quick reference guides
 │   └── pdf/          # Downloadable PDF resources
-├── python/           # Python content (coming soon)
+├── python/           # Python content
+│   ├── lessons/      # python lesson content
+│   ├── labs/         # Hands-on lab exercises
+│   ├── cheatsheets/  # Quick reference guides
+│   └── pdf/ 
+├── Git/              # Git content
 └── index.md          # Course landing page
 ```
 
