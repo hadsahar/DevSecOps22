@@ -830,16 +830,6 @@ body {
         <p class="card-description">Python lessons from fundamentals to DevOps-ready scripting</p>
 
         <ul class="content-list">
-          {% if python_lessons | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Python lessons published yet</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Add front matter to python lesson markdown files to list them here</p>
-          </li>
-          {% endif %}
-
           {% for p in python_lessons %}
           <li class="content-item">
             <div class="item-header">
@@ -870,16 +860,6 @@ body {
         <p class="card-description">Hands-on practice exercises to build confidence</p>
 
         <ul class="content-list">
-          {% if python_labs | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Python labs published yet</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Create python labs under python/labs with front matter to list them here</p>
-          </li>
-          {% endif %}
-
           {% for p in python_labs %}
           <li class="content-item">
             <div class="item-header">
@@ -910,16 +890,6 @@ body {
         <p class="card-description">Quick reference guides for Python syntax and patterns</p>
 
         <ul class="content-list">
-          {% if python_cheatsheets | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Python cheatsheets published yet</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Add cheatsheets under python/cheatsheets with front matter to list them here</p>
-          </li>
-          {% endif %}
-
           {% for p in python_cheatsheets %}
           <li class="content-item">
             <div class="item-header">
@@ -950,16 +920,6 @@ body {
         <p class="card-description">Downloadable PDFs and classroom code files</p>
 
         <ul class="content-list">
-          {% if python_pdfs | size == 0 and python_classcode | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Python PDFs or class code found</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Add PDFs to python/pdf and code files to python/classcode</p>
-          </li>
-          {% endif %}
-
           {% for f in python_pdfs %}
           <li class="content-item">
             <div class="item-header">
