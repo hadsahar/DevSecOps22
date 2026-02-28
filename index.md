@@ -813,40 +813,188 @@ body {
       <h2 class="section-title">🐍 Python Programming</h2>
       <p class="section-description">Learn Python for DevOps automation and scripting</p>
     </div>
-    
+
+    {% assign python_lessons = site.pages | where_exp: "p", "p.url contains '/python/lessons/'" | sort: "url" %}
+    {% assign python_labs = site.pages | where_exp: "p", "p.url contains '/python/labs/'" | sort: "url" %}
+    {% assign python_cheatsheets = site.pages | where_exp: "p", "p.url contains '/python/cheatsheets/'" | sort: "url" %}
+    {% assign python_pdfs = site.static_files | where_exp: "f", "f.path contains '/python/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+    {% assign python_classcode = site.static_files | where_exp: "f", "f.path contains '/python/classcode/'" | where_exp: "f", "f.extname == '.py'" | sort: "path" %}
+
     <div class="grid python">
+      <!-- Python Lessons Card -->
       <div class="card">
         <div class="card-header">
           <div class="card-icon">📚</div>
-          <h3 class="card-title">Python Content</h3>
-          <span class="coming-soon-badge">Coming Soon</span>
+          <h3 class="card-title">Lessons</h3>
         </div>
-        <p class="card-description">Python lessons, labs, and resources will be added here as the course progresses</p>
-        
+        <p class="card-description">Python lessons from fundamentals to DevOps-ready scripting</p>
+
         <ul class="content-list">
+          {% if python_lessons | size == 0 %}
           <li class="content-item">
             <div class="item-header">
-              <span class="item-title">Python Basics</span>
-              <span class="item-badge">Planned</span>
+              <span class="item-title">No Python lessons published yet</span>
+              <span class="item-badge">Info</span>
             </div>
-            <p class="item-description">Variables, data types, control flow, and functions</p>
+            <p class="item-description">Add front matter to python lesson markdown files to list them here</p>
           </li>
+          {% endif %}
+
+          {% for p in python_lessons %}
           <li class="content-item">
             <div class="item-header">
-              <span class="item-title">Python for DevOps</span>
-              <span class="item-badge">Planned</span>
+              <span class="item-title">{{ p.title | escape }}</span>
+              <span class="item-badge">Lesson</span>
             </div>
-            <p class="item-description">Automation scripts, API integration, and system administration</p>
+            <p class="item-description">Open the lesson page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📖 Start Lesson</a>
+            </div>
           </li>
+          {% endfor %}
         </ul>
-        
+
         <div class="tags">
-          <span class="tag">automation</span>
+          <span class="tag">python</span>
+          <span class="tag">fundamentals</span>
           <span class="tag">scripting</span>
-          <span class="tag">devops</span>
+        </div>
+      </div>
+
+      <!-- Python Labs Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🔬</div>
+          <h3 class="card-title">Labs</h3>
+        </div>
+        <p class="card-description">Hands-on practice exercises to build confidence</p>
+
+        <ul class="content-list">
+          {% if python_labs | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Python labs published yet</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Create python labs under python/labs with front matter to list them here</p>
+          </li>
+          {% endif %}
+
+          {% for p in python_labs %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ p.title | escape }}</span>
+              <span class="item-badge">Lab</span>
+            </div>
+            <p class="item-description">Open the lab page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">🧪 Start Lab</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">practice</span>
+          <span class="tag">exercises</span>
+          <span class="tag">learning</span>
+        </div>
+      </div>
+
+      <!-- Python Cheatsheets Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <h3 class="card-title">Cheatsheets</h3>
+        </div>
+        <p class="card-description">Quick reference guides for Python syntax and patterns</p>
+
+        <ul class="content-list">
+          {% if python_cheatsheets | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Python cheatsheets published yet</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Add cheatsheets under python/cheatsheets with front matter to list them here</p>
+          </li>
+          {% endif %}
+
+          {% for p in python_cheatsheets %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ p.title | escape }}</span>
+              <span class="item-badge">Cheatsheet</span>
+            </div>
+            <p class="item-description">Open the cheatsheet page</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📑 View Cheatsheet</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">reference</span>
+          <span class="tag">quick-guide</span>
+          <span class="tag">syntax</span>
+        </div>
+      </div>
+
+      <!-- Python PDFs + Class Code Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📄</div>
+          <h3 class="card-title">PDFs & Class Code</h3>
+        </div>
+        <p class="card-description">Downloadable PDFs and classroom code files</p>
+
+        <ul class="content-list">
+          {% if python_pdfs | size == 0 and python_classcode | size == 0 %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">No Python PDFs or class code found</span>
+              <span class="item-badge">Info</span>
+            </div>
+            <p class="item-description">Add PDFs to python/pdf and code files to python/classcode</p>
+          </li>
+          {% endif %}
+
+          {% for f in python_pdfs %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
+              <span class="item-badge">PDF</span>
+            </div>
+            <p class="item-description">Download PDF</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">⬇️ Download PDF</a>
+            </div>
+          </li>
+          {% endfor %}
+
+          {% for f in python_classcode %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}.py</span>
+              <span class="item-badge">Code</span>
+            </div>
+            <p class="item-description">View the class code file</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">👨‍💻 View Code</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tags">
+          <span class="tag">pdf</span>
+          <span class="tag">classcode</span>
+          <span class="tag">offline</span>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

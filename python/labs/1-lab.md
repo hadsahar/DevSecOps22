@@ -1,3 +1,10 @@
+---
+layout: default
+title: Python Lab 1 - Practice Exercises
+---
+
+# Python Lab 1 - Practice Exercises
+
 ## Practice exercises
 
 1. Ask the user for two numbers and print their sum, subtraction, multiplication, and division
