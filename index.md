@@ -817,6 +817,7 @@ body {
     {% assign python_lessons = site.pages | where_exp: "p", "p.url contains '/python/lessons/'" | sort: "url" %}
     {% assign python_labs = site.pages | where_exp: "p", "p.url contains '/python/labs/'" | sort: "url" %}
     {% assign python_cheatsheets = site.pages | where_exp: "p", "p.url contains '/python/cheatsheets/'" | sort: "url" %}
+    {% assign python_cheatsheet_pdfs = site.static_files | where_exp: "f", "f.path contains '/python/cheatsheets/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
     {% assign python_pdfs = site.static_files | where_exp: "f", "f.path contains '/python/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
     {% assign python_classcode = site.static_files | where_exp: "f", "f.path contains '/python/classcode/'" | where_exp: "f", "f.extname == '.py'" | sort: "path" %}
 
@@ -899,6 +900,19 @@ body {
             <p class="item-description">Open the cheatsheet page</p>
             <div class="item-links">
               <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📑 View Cheatsheet</a>
+            </div>
+          </li>
+          {% endfor %}
+
+          {% for f in python_cheatsheet_pdfs %}
+          <li class="content-item">
+            <div class="item-header">
+              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
+              <span class="item-badge">PDF</span>
+            </div>
+            <p class="item-description">Open the cheatsheet PDF</p>
+            <div class="item-links">
+              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">📑 View Cheatsheet</a>
             </div>
           </li>
           {% endfor %}
