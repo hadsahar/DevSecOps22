@@ -925,13 +925,13 @@ body {
         </div>
       </div>
 
-      <!-- Python PDFs + Class Code Card -->
+      <!-- Python PDF Resources Card -->
       <div class="card">
         <div class="card-header">
           <div class="card-icon">📄</div>
-          <h3 class="card-title">PDFs & Class Code</h3>
+          <h3 class="card-title">PDF Resources</h3>
         </div>
-        <p class="card-description">Downloadable PDFs and classroom code files</p>
+        <p class="card-description">Downloadable PDFs for offline learning</p>
 
         <ul class="content-list">
           {% for f in python_pdfs %}
@@ -946,7 +946,24 @@ body {
             </div>
           </li>
           {% endfor %}
+        </ul>
 
+        <div class="tags">
+          <span class="tag">pdf</span>
+          <span class="tag">offline</span>
+          <span class="tag">printable</span>
+        </div>
+      </div>
+
+      <!-- Python Class Code Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">👨‍💻</div>
+          <h3 class="card-title">Class Code</h3>
+        </div>
+        <p class="card-description">Classroom Python code files</p>
+
+        <ul class="content-list">
           {% for f in python_classcode %}
           <li class="content-item">
             <div class="item-header">
@@ -962,9 +979,9 @@ body {
         </ul>
 
         <div class="tags">
-          <span class="tag">pdf</span>
+          <span class="tag">python</span>
           <span class="tag">classcode</span>
-          <span class="tag">offline</span>
+          <span class="tag">examples</span>
         </div>
       </div>
     </div>

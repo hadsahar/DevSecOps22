@@ -4,7 +4,7 @@ title: Python Lab 2 - Practice Exercises
 ---
 
 1. How can you convert the return value of input() into an integer? A float?
-   What does the in operator do (between an element and a list)?
+15. What does the in operator do (between an element and a list)?
 2. How do you write conditions in Python? What is the difference between else and elif?
 3. How does Python know which lines belong to an if block?
 4. Program: read 2 numbers and print the bigger
