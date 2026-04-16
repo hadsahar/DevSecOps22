@@ -1,1156 +1,662 @@
 ---
 layout: default
-title: DevSecOps-22 - Complete Course
+title: DevSecOps-22
 ---
 
+{% assign linux_lessons       = site.pages | where_exp: "p", "p.url contains '/linux/lessons/'" | sort: "url" %}
+{% assign linux_labs          = site.pages | where_exp: "p", "p.url contains '/linux/labs/'" | sort: "url" %}
+{% assign linux_cheatsheets   = site.pages | where_exp: "p", "p.url contains '/linux/cheatsheets/'" | sort: "url" %}
+{% assign linux_pdfs          = site.static_files | where_exp: "f", "f.path contains '/linux/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+{% assign linux_cheat_pdfs    = site.static_files | where_exp: "f", "f.path contains '/linux/cheatsheets/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+
+{% assign python_lessons      = site.pages | where_exp: "p", "p.url contains '/python/lessons/'" | sort: "url" %}
+{% assign python_labs         = site.pages | where_exp: "p", "p.url contains '/python/labs/'" | sort: "url" %}
+{% assign python_cheat_pdfs   = site.static_files | where_exp: "f", "f.path contains '/python/cheatsheets/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+{% assign python_pdfs         = site.static_files | where_exp: "f", "f.path contains '/python/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+{% assign python_classcode    = site.static_files | where_exp: "f", "f.path contains '/python/classcode/'" | where_exp: "f", "f.extname == '.py'" | sort: "path" %}
+
+{% assign git_lessons         = site.pages | where_exp: "p", "p.url contains '/GIT/lessons/'" | sort: "url" %}
+{% assign git_pdfs            = site.static_files | where_exp: "f", "f.path contains '/GIT/PDF/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+
 <style>
-/* Modern Theme Variables */
+/* ── Reset & layout override ─────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+main.page, .page { all: unset !important; display: flex !important; flex-direction: column !important; height: 100vh !important; overflow: hidden !important; }
+
+/* ── Design tokens ───────────────────────────────────────── */
 :root {
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --secondary: #ec4899;
-  --accent: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --dark: #0f172a;
-  --dark-lighter: #1e293b;
-  --dark-card: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --border: #475569;
-  --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --bg:       #1e1e1e;
+  --bar:      #2d2d2d;
+  --side:     #252526;
+  --hover:    #2a2d2e;
+  --active:   #37373d;
+  --border:   #3e3e42;
+  --text:     #cccccc;
+  --muted:    #858585;
+  --accent:   #818cf8;
+  --pink:     #ec4899;
+  --green:    #4ec9b0;
+  --blue:     #4fc3f7;
+  --yellow:   #e2c08d;
+  --orange:   #ce9178;
 }
 
-/* Reset and Base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ── Typography ──────────────────────────────────────────── */
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--dark);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Hero Section */
-.hero {
-  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-lighter) 100%);
-  padding: 80px 20px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.hero h1 {
-  font-size: 4rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 20px;
-  animation: fadeInUp 0.8s ease;
-}
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  color: var(--text-secondary);
-  margin-bottom: 40px;
-  animation: fadeInUp 0.8s ease 0.2s both;
-}
-
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  margin-top: 60px;
-  animation: fadeInUp 0.8s ease 0.4s both;
-}
-
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--primary);
-  display: block;
-}
-
-.stat-label {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Navigation Tabs */
-.nav-tabs {
-  background: var(--dark-lighter);
-  padding: 20px;
+/* ── Top bar ─────────────────────────────────────────────── */
+.topbar {
+  background: var(--bar);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(10px);
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0 20px;
+  height: 48px;
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  z-index: 10;
 }
-
-.nav-tab {
-  padding: 12px 24px;
-  background: var(--dark-card);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-tab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.nav-tab:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-}
-
-.nav-tab.active {
-  border-color: var(--primary);
-  color: var(--text-primary);
-}
-
-.nav-tab.active::before {
-  opacity: 0.1;
-}
-
-.nav-icon {
-  display: inline-block;
-  margin-right: 8px;
-}
-
-/* Content Sections */
-.content-section {
-  display: none;
-  animation: fadeIn 0.5s ease;
-}
-
-.content-section.active {
-  display: block;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px;
-}
-
-/* Section Headers */
-.section-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.section-title {
-  font-size: 2.5rem;
+.topbar-logo {
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 15px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, var(--accent), var(--pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  letter-spacing: .5px;
 }
-
-.section-description {
-  font-size: 1.2rem;
-  color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Grid Layout */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-}
-
-/* Cards */
-.card {
-  background: var(--dark-lighter);
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-chips { display: flex; gap: 6px; }
+.chip {
+  background: var(--active);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 30px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  padding: 3px 11px;
+  border-radius: 20px;
+  font-size: .75rem;
+  color: var(--muted);
+  cursor: default;
 }
+.chip.linux  { border-color: #4fc3f7; color: #4fc3f7; }
+.chip.python { border-color: #4ec9b0; color: #4ec9b0; }
+.chip.git    { border-color: #e2c08d; color: #e2c08d; }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-1);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+.topbar-hw {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity .15s;
 }
+.topbar-hw:hover { opacity: .85; }
 
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  border-color: var(--primary);
+/* ── Workspace ───────────────────────────────────────────── */
+.workspace { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar {
+  width: 290px;
+  background: var(--side);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 }
-
-.card:hover::before {
-  transform: scaleX(1);
+.sidebar-hdr {
+  padding: 8px 14px 7px;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--muted);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
+.tree { flex: 1; overflow-y: auto; padding: 6px 0; }
+.tree::-webkit-scrollbar { width: 6px; }
+.tree::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-.card-header {
+/* subject row */
+.t-subj {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: .875rem;
+  font-weight: 600;
+  transition: background .1s;
+  user-select: none;
+  border-left: 3px solid transparent;
+}
+.t-subj:hover { background: var(--hover); }
+.t-subj.open  { border-left-color: var(--accent); }
+
+/* category row */
+.t-cat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 26px;
+  cursor: pointer;
+  font-size: .825rem;
+  color: #bbb;
+  transition: background .1s;
+  user-select: none;
+}
+.t-cat:hover { background: var(--hover); }
+.t-cat.sel   { background: var(--active); color: var(--text); }
+
+/* file row */
+.t-file {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 42px;
+  font-size: .78rem;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background .1s;
+}
+.t-file:hover { background: var(--hover); color: var(--text); }
+
+/* arrow */
+.arr {
+  font-size: .58rem;
+  color: var(--muted);
+  transition: transform .15s;
+  flex-shrink: 0;
+  display: inline-block;
+  width: 12px;
+}
+.arr.open { transform: rotate(90deg); }
+
+/* count badge */
+.cnt {
+  margin-left: auto;
+  font-size: .68rem;
+  background: var(--border);
+  color: var(--muted);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 400;
+  flex-shrink: 0;
 }
 
-.card-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--gradient-1);
-  border-radius: 12px;
+/* collapsible children */
+.t-kids { display: none; }
+.t-kids.open { display: block; }
+
+/* ── Main content ────────────────────────────────────────── */
+.main { flex: 1; overflow-y: auto; padding: 28px 32px; }
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* welcome screen */
+.welcome {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-right: 15px;
-  font-size: 1.5rem;
-}
-
-.card-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.card-description {
-  color: var(--text-secondary);
-  margin-bottom: 25px;
-  line-height: 1.6;
-}
-
-/* Content Lists */
-.content-list {
-  list-style: none;
-}
-
-.content-item {
-  background: var(--dark);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-}
-
-.content-item:hover {
-  background: var(--dark-card);
-  border-color: var(--primary);
-  transform: translateX(5px);
-}
-
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.item-title {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.item-badge {
-  background: var(--primary);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.item-description {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 15px;
-}
-
-.item-links {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.item-link {
-  background: var(--dark-card);
-  color: var(--text-primary);
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  border: 1px solid var(--border);
-}
-
-.item-link:hover {
-  background: var(--primary);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-}
-
-/* Special Cards for Different Sections */
-.linux .card-icon { background: var(--gradient-1); }
-.python .card-icon { background: var(--gradient-4); }
-.coming-soon .card-icon { background: var(--gradient-2); }
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-  
-  .hero-stats {
-    gap: 30px;
-  }
-  
-  .stat-number {
-    font-size: 2rem;
-  }
-  
-  .nav-container {
-    gap: 10px;
-  }
-  
-  .nav-tab {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-  }
-  
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .container {
-    padding: 40px 15px;
-  }
-}
-
-/* Loading Animation */
-.loading {
+  height: 100%;
   text-align: center;
-  padding: 40px;
-  color: var(--text-muted);
+  color: var(--muted);
+  min-height: 300px;
 }
-
-/* Search Bar */
-.search-container {
-  max-width: 600px;
-  margin: 0 auto 40px;
-  position: relative;
+.welcome h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
 }
-
-.search-input {
-  width: 100%;
-  padding: 15px 20px 15px 50px;
-  background: var(--dark-lighter);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  color: var(--text-primary);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.search-icon {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
-
-/* Tags */
-.tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 15px;
-}
-
-.tag {
-  background: var(--dark-card);
-  color: var(--text-secondary);
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 0.8rem;
+.welcome p { font-size: .95rem; margin-bottom: 28px; }
+.welcome-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.w-pill {
   border: 1px solid var(--border);
-}
-
-/* Coming Soon Badge */
-.coming-soon-badge {
-  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-  color: white;
-  padding: 6px 14px;
+  background: var(--side);
+  padding: 8px 18px;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: inline-block;
-  margin-left: 10px;
+  font-size: .85rem;
+  color: var(--text);
 }
 
+/* panel */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* breadcrumb */
+.bc {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .82rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bc b { color: var(--text); font-weight: 600; }
+.bc-sep { opacity: .45; }
+
+/* file grid */
+.fgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+/* file card */
+.fcard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--side);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all .15s ease;
+  cursor: pointer;
+}
+.fcard:hover {
+  border-color: var(--accent);
+  background: var(--active);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(129,140,248,.18);
+}
+.fcard-ico { font-size: 1.8rem; flex-shrink: 0; line-height: 1; }
+.fcard-info { flex: 1; min-width: 0; }
+.fcard-name { font-size: .82rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fcard-type { font-size: .72rem; color: var(--muted); margin-top: 3px; }
+
+/* empty state */
+.empty { text-align: center; padding: 40px; color: var(--muted); font-size: .88rem; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .workspace { flex-direction: column; }
+  .sidebar { width: 100%; height: 230px; border-right: none; border-bottom: 1px solid var(--border); }
+  .fgrid { grid-template-columns: 1fr 1fr; }
+  .topbar-chips { display: none; }
+}
 </style>
 
-<!-- Hero Section -->
-<div class="hero">
-  <div class="hero-content">
-    <h1>DevSecOps-22</h1>
-    <p class="hero-subtitle">Master DevSecOps with Hands-On Learning Experience</p>
-
-    {% assign linux_lessons = site.pages | where_exp: "p", "p.url contains '/linux/lessons/'" | sort: "url" %}
-    {% assign linux_labs = site.pages | where_exp: "p", "p.url contains '/linux/labs/'" | sort: "url" %}
-    {% assign linux_cheatsheets = site.pages | where_exp: "p", "p.url contains '/linux/cheatsheets/'" | sort: "url" %}
-    {% assign linux_pdfs = site.static_files | where_exp: "f", "f.path contains '/linux/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
-
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number" id="lessonsCount">{{ linux_lessons | size }}</span>
-        <span class="stat-label">Lessons</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number" id="labsCount">{{ linux_labs | size }}</span>
-        <span class="stat-label">Labs</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number" id="cheatsheetsCount">{{ linux_cheatsheets | size }}</span>
-        <span class="stat-label">Cheatsheets</span>
-      </div>
-    </div>
-
+<!-- ═══════════════════════════ TOP BAR ═══════════════════════════ -->
+<div class="topbar">
+  <span style="font-size:1.1rem">📁</span>
+  <span class="topbar-logo">DevSecOps-22</span>
+  <div class="topbar-sep"></div>
+  <div class="topbar-chips">
+    <span class="chip linux">🐧 Linux</span>
+    <span class="chip python">🐍 Python</span>
+    <span class="chip git">🌿 GIT</span>
   </div>
+  <a class="topbar-hw" href="{{ site.baseurl }}/homeworks/linux-homework/">📝 Homework</a>
 </div>
 
-<!-- Navigation Tabs -->
-<div class="nav-tabs">
-  <div class="nav-container">
-    <button class="nav-tab active" onclick="showSection('linux')">
-      <span class="nav-icon">🐧</span>Linux
-    </button>
-    <button class="nav-tab" onclick="showSection('git')">
-      <span class="nav-icon">🌿</span>Git
-    </button>
-    <button class="nav-tab" onclick="showSection('python')">
-      <span class="nav-icon">🐍</span>Python
-    </button>
-    <button class="nav-tab" onclick="showSection('homeworks')">
-      <span class="nav-icon">📝</span>Homework
-    </button>
-    <button class="nav-tab" onclick="showSection('coming-soon')">
-      <span class="nav-icon">🚀</span>Coming Soon
-    </button>
-  </div>
-</div>
+<!-- ═══════════════════════════ WORKSPACE ═══════════════════════════ -->
+<div class="workspace">
 
-<!-- Linux Section -->
-<div id="linux" class="content-section active">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">🐧 Linux Fundamentals</h2>
-      <p class="section-description">Master Linux command-line, system administration, and shell scripting</p>
-    </div>
-    
-    <div class="grid linux">
-      <!-- Lessons Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📚</div>
-          <h3 class="card-title">Lessons</h3>
-        </div>
-        <p class="card-description">Comprehensive lessons covering Linux fundamentals from basics to advanced topics</p>
-        
-        <ul class="content-list">
-          {% for p in linux_lessons %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lesson</span>
-            </div>
-            <p class="item-description">Open the lesson page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📖 Start Lesson</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        
-        <div class="tags">
-          <span class="tag">fundamentals</span>
-          <span class="tag">cli</span>
-          <span class="tag">bash</span>
-        </div>
-      </div>
-      
-      <!-- Labs Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🔬</div>
-          <h3 class="card-title">Labs</h3>
-        </div>
-        <p class="card-description">Hands-on exercises to practice and reinforce your Linux skills</p>
-        
-        <ul class="content-list">
-          {% for p in linux_labs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lab</span>
-            </div>
-            <p class="item-description">Open the lab page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">🧪 Start Lab</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        
-        <div class="tags">
-          <span class="tag">practice</span>
-          <span class="tag">exercises</span>
-          <span class="tag">hands-on</span>
-        </div>
-      </div>
-      
-      <!-- Cheatsheets Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📋</div>
-          <h3 class="card-title">Cheatsheets</h3>
-        </div>
-        <p class="card-description">Quick reference guides for common Linux commands and operations</p>
-        
-        <ul class="content-list">
-          {% for p in linux_cheatsheets %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Cheatsheet</span>
-            </div>
-            <p class="item-description">Open the cheatsheet page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📑 View Cheatsheet</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        
-        <div class="tags">
-          <span class="tag">reference</span>
-          <span class="tag">quick-guide</span>
-          <span class="tag">commands</span>
-        </div>
-      </div>
-      
-      <!-- PDFs Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📄</div>
-          <h3 class="card-title">PDF Resources</h3>
-        </div>
-        <p class="card-description">Downloadable PDF materials for offline learning</p>
-        
-        <ul class="content-list">
-          {% for f in linux_pdfs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
-              <span class="item-badge">PDF</span>
-            </div>
-            <p class="item-description">Download PDF</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">⬇️ Download PDF</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        
-        <div class="tags">
-          <span class="tag">pdf</span>
-          <span class="tag">offline</span>
-          <span class="tag">printable</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- ─── Sidebar Tree ─── -->
+  <div class="sidebar">
+    <div class="sidebar-hdr">Explorer</div>
+    <div class="tree">
 
-<!-- Git Section -->
-<div id="git" class="content-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">🌿 Git Fundamentals</h2>
-      <p class="section-description">Learn version control, collaboration, and Git workflows</p>
+      <!-- ╔══ LINUX ══╗ -->
+      <div class="t-subj" onclick="toggleSubj('linux',this)">
+        <span class="arr" id="arr-linux">▶</span>
+        <span>🐧</span><span>Linux</span>
+        <span class="cnt">{{ linux_lessons.size | plus: linux_labs.size | plus: linux_cheatsheets.size | plus: linux_cheat_pdfs.size | plus: linux_pdfs.size }}</span>
+      </div>
+      <div class="t-kids" id="subj-linux">
+
+        <div class="t-cat" onclick="openCat('linux-lessons',this)" id="cat-linux-lessons">
+          <span class="arr" id="arr-linux-lessons">▶</span><span>📚</span><span>lessons</span>
+          <span class="cnt">{{ linux_lessons.size }}</span>
+        </div>
+        <div class="t-kids" id="files-linux-lessons">
+          {% for p in linux_lessons %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('linux-labs',this)" id="cat-linux-labs">
+          <span class="arr" id="arr-linux-labs">▶</span><span>🔬</span><span>labs</span>
+          <span class="cnt">{{ linux_labs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-linux-labs">
+          {% for p in linux_labs %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('linux-cheatsheets',this)" id="cat-linux-cheatsheets">
+          <span class="arr" id="arr-linux-cheatsheets">▶</span><span>📋</span><span>cheatsheets</span>
+          <span class="cnt">{{ linux_cheatsheets.size | plus: linux_cheat_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-linux-cheatsheets">
+          {% for p in linux_cheatsheets %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+          {% for f in linux_cheat_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('linux-pdf',this)" id="cat-linux-pdf">
+          <span class="arr" id="arr-linux-pdf">▶</span><span>📄</span><span>pdf</span>
+          <span class="cnt">{{ linux_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-linux-pdf">
+          {% for f in linux_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+      </div>
+
+      <!-- ╔══ PYTHON ══╗ -->
+      <div class="t-subj" onclick="toggleSubj('python',this)">
+        <span class="arr" id="arr-python">▶</span>
+        <span>🐍</span><span>Python</span>
+        <span class="cnt">{{ python_lessons.size | plus: python_labs.size | plus: python_cheat_pdfs.size | plus: python_pdfs.size | plus: python_classcode.size }}</span>
+      </div>
+      <div class="t-kids" id="subj-python">
+
+        <div class="t-cat" onclick="openCat('python-lessons',this)" id="cat-python-lessons">
+          <span class="arr" id="arr-python-lessons">▶</span><span>📚</span><span>lessons</span>
+          <span class="cnt">{{ python_lessons.size }}</span>
+        </div>
+        <div class="t-kids" id="files-python-lessons">
+          {% for p in python_lessons %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('python-labs',this)" id="cat-python-labs">
+          <span class="arr" id="arr-python-labs">▶</span><span>🔬</span><span>labs</span>
+          <span class="cnt">{{ python_labs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-python-labs">
+          {% for p in python_labs %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('python-cheatsheets',this)" id="cat-python-cheatsheets">
+          <span class="arr" id="arr-python-cheatsheets">▶</span><span>📋</span><span>cheatsheets</span>
+          <span class="cnt">{{ python_cheat_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-python-cheatsheets">
+          {% for f in python_cheat_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('python-pdf',this)" id="cat-python-pdf">
+          <span class="arr" id="arr-python-pdf">▶</span><span>📄</span><span>pdf</span>
+          <span class="cnt">{{ python_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-python-pdf">
+          {% for f in python_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('python-classcode',this)" id="cat-python-classcode">
+          <span class="arr" id="arr-python-classcode">▶</span><span>👨‍💻</span><span>classcode</span>
+          <span class="cnt">{{ python_classcode.size }}</span>
+        </div>
+        <div class="t-kids" id="files-python-classcode">
+          {% for f in python_classcode %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">🐍 {{ f.basename }}.py</a>{% endfor %}
+        </div>
+
+      </div>
+
+      <!-- ╔══ GIT ══╗ -->
+      <div class="t-subj" onclick="toggleSubj('git',this)">
+        <span class="arr" id="arr-git">▶</span>
+        <span>🌿</span><span>GIT</span>
+        <span class="cnt">{{ git_lessons.size | plus: git_pdfs.size }}</span>
+      </div>
+      <div class="t-kids" id="subj-git">
+
+        <div class="t-cat" onclick="openCat('git-lessons',this)" id="cat-git-lessons">
+          <span class="arr" id="arr-git-lessons">▶</span><span>📚</span><span>lessons</span>
+          <span class="cnt">{{ git_lessons.size }}</span>
+        </div>
+        <div class="t-kids" id="files-git-lessons">
+          {% for p in git_lessons %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('git-pdf',this)" id="cat-git-pdf">
+          <span class="arr" id="arr-git-pdf">▶</span><span>📄</span><span>pdf</span>
+          <span class="cnt">{{ git_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-git-pdf">
+          {% for f in git_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+      </div>
+
     </div>
 
-    {% assign git_lessons = site.pages | where_exp: "p", "p.url contains '/GIT/lessons/'" | sort: "url" %}
-    {% assign git_labs = site.pages | where_exp: "p", "p.url contains '/GIT/labs/'" | sort: "url" %}
-    {% assign git_pdfs = site.static_files | where_exp: "f", "f.path contains '/GIT/PDF/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+  </div><!-- /sidebar -->
 
-    <div class="grid">
-      <!-- Git Lessons Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📚</div>
-          <h3 class="card-title">Lessons</h3>
-        </div>
-        <p class="card-description">Step-by-step lessons to understand Git concepts and commands</p>
+  <!-- ─── Main Panel ─── -->
+  <div class="main" id="main">
 
-        <ul class="content-list">
-          {% if git_lessons | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Git lessons published yet</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Add Jekyll front matter to Git lesson markdown files to make them appear here</p>
-          </li>
-          {% endif %}
-
-          {% for p in git_lessons %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lesson</span>
-            </div>
-            <p class="item-description">Open the lesson page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📖 Start Lesson</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">version-control</span>
-          <span class="tag">workflow</span>
-          <span class="tag">collaboration</span>
-        </div>
-      </div>
-
-      <!-- Git Labs Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🔬</div>
-          <h3 class="card-title">Labs</h3>
-        </div>
-        <p class="card-description">Hands-on tasks to practice Git locally and with remotes</p>
-
-        <ul class="content-list">
-          {% if git_labs | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Git labs published yet</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Create Git labs under GIT/labs with front matter to list them here</p>
-          </li>
-          {% endif %}
-
-          {% for p in git_labs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lab</span>
-            </div>
-            <p class="item-description">Open the lab page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">🧪 Start Lab</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">practice</span>
-          <span class="tag">branching</span>
-          <span class="tag">merge</span>
-        </div>
-      </div>
-
-      <!-- Git PDFs Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📄</div>
-          <h3 class="card-title">PDF Resources</h3>
-        </div>
-        <p class="card-description">Downloadable Git PDFs for offline learning</p>
-
-        <ul class="content-list">
-          {% if git_pdfs | size == 0 %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">No Git PDFs found</span>
-              <span class="item-badge">Info</span>
-            </div>
-            <p class="item-description">Add PDFs to GIT/PDF to list them here</p>
-          </li>
-          {% endif %}
-
-          {% for f in git_pdfs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
-              <span class="item-badge">PDF</span>
-            </div>
-            <p class="item-description">Download PDF</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">⬇️ Download PDF</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">pdf</span>
-          <span class="tag">offline</span>
-          <span class="tag">printable</span>
-        </div>
+    <!-- Welcome -->
+    <div class="welcome" id="welcome">
+      <h1>DevSecOps-22</h1>
+      <p>Click any folder in the explorer to browse its files</p>
+      <div class="welcome-pills">
+        <span class="w-pill">🐧 Linux</span>
+        <span class="w-pill">🐍 Python</span>
+        <span class="w-pill">🌿 GIT</span>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- Python Section -->
-<div id="python" class="content-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">🐍 Python Programming</h2>
-      <p class="section-description">Learn Python for DevOps automation and scripting</p>
-    </div>
-
-    {% assign python_lessons = site.pages | where_exp: "p", "p.url contains '/python/lessons/'" | sort: "url" %}
-    {% assign python_labs = site.pages | where_exp: "p", "p.url contains '/python/labs/'" | sort: "url" %}
-    {% assign python_cheatsheets = site.pages | where_exp: "p", "p.url contains '/python/cheatsheets/'" | sort: "url" %}
-    {% assign python_cheatsheet_pdfs = site.static_files | where_exp: "f", "f.path contains '/python/cheatsheets/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
-    {% assign python_pdfs = site.static_files | where_exp: "f", "f.path contains '/python/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
-    {% assign python_classcode = site.static_files | where_exp: "f", "f.path contains '/python/classcode/'" | where_exp: "f", "f.extname == '.py'" | sort: "path" %}
-
-    <div class="grid python">
-      <!-- Python Lessons Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📚</div>
-          <h3 class="card-title">Lessons</h3>
-        </div>
-        <p class="card-description">Python lessons from fundamentals to DevOps-ready scripting</p>
-
-        <ul class="content-list">
-          {% for p in python_lessons %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lesson</span>
-            </div>
-            <p class="item-description">Open the lesson page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📖 Start Lesson</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">python</span>
-          <span class="tag">fundamentals</span>
-          <span class="tag">scripting</span>
-        </div>
-      </div>
-
-      <!-- Python Labs Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🔬</div>
-          <h3 class="card-title">Labs</h3>
-        </div>
-        <p class="card-description">Hands-on practice exercises to build confidence</p>
-
-        <ul class="content-list">
-          {% for p in python_labs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Lab</span>
-            </div>
-            <p class="item-description">Open the lab page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">🧪 Start Lab</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">practice</span>
-          <span class="tag">exercises</span>
-          <span class="tag">learning</span>
-        </div>
-      </div>
-
-      <!-- Python Cheatsheets Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📋</div>
-          <h3 class="card-title">Cheatsheets</h3>
-        </div>
-        <p class="card-description">Quick reference guides for Python syntax and patterns</p>
-
-        <ul class="content-list">
-          {% for p in python_cheatsheets %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ p.title | escape }}</span>
-              <span class="item-badge">Cheatsheet</span>
-            </div>
-            <p class="item-description">Open the cheatsheet page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ p.url }}" class="item-link">📑 View Cheatsheet</a>
-            </div>
-          </li>
-          {% endfor %}
-
-          {% for f in python_cheatsheet_pdfs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
-              <span class="item-badge">PDF</span>
-            </div>
-            <p class="item-description">Open the cheatsheet PDF</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">📑 View Cheatsheet</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">reference</span>
-          <span class="tag">quick-guide</span>
-          <span class="tag">syntax</span>
-        </div>
-      </div>
-
-      <!-- Python PDF Resources Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📄</div>
-          <h3 class="card-title">PDF Resources</h3>
-        </div>
-        <p class="card-description">Downloadable PDFs for offline learning</p>
-
-        <ul class="content-list">
-          {% for f in python_pdfs %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}</span>
-              <span class="item-badge">PDF</span>
-            </div>
-            <p class="item-description">Download PDF</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">⬇️ Download PDF</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">pdf</span>
-          <span class="tag">offline</span>
-          <span class="tag">printable</span>
-        </div>
-      </div>
-
-      <!-- Python Class Code Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">👨‍💻</div>
-          <h3 class="card-title">Class Code</h3>
-        </div>
-        <p class="card-description">Classroom Python code files</p>
-
-        <ul class="content-list">
-          {% for f in python_classcode %}
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' | escape }}.py</span>
-              <span class="item-badge">Code</span>
-            </div>
-            <p class="item-description">View the class code file</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}{{ f.path }}" class="item-link">👨‍💻 View Code</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <div class="tags">
-          <span class="tag">python</span>
-          <span class="tag">classcode</span>
-          <span class="tag">examples</span>
-        </div>
+    <!-- ── Linux panels ── -->
+    <div class="panel" id="panel-linux-lessons">
+      <div class="bc">🐧 Linux <span class="bc-sep">›</span> <b>📚 Lessons</b></div>
+      <div class="fgrid">
+        {% for p in linux_lessons %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📝</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lesson</div>
+          </div>
+        </a>
+        {% endfor %}
       </div>
     </div>
 
-  </div>
-</div>
+    <div class="panel" id="panel-linux-labs">
+      <div class="bc">🐧 Linux <span class="bc-sep">›</span> <b>🔬 Labs</b></div>
+      <div class="fgrid">
+        {% for p in linux_labs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">🔬</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lab</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
 
-<!-- Homeworks Section -->
-<div id="homeworks" class="content-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">📝 Homeworks</h2>
-      <p class="section-description">Practice with randomly generated questions from easy to extremely hard</p>
-    </div>
-    
-    <div class="grid">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📝</div>
-          <h3 class="card-title">Linux Homework</h3>
-        </div>
-        <p class="card-description">Generate 20 random Linux questions (easy to extremely hard) and copy them as text</p>
-        <ul class="content-list">
-          <li class="content-item">
-            <div class="item-header">
-              <span class="item-title">Linux Homework (Random 20 Questions)</span>
-              <span class="item-badge">Practice</span>
-            </div>
-            <p class="item-description">A new set of questions is generated each time you open the page</p>
-            <div class="item-links">
-              <a href="{{ site.baseurl }}/homeworks/linux-homework/" class="item-link">📝 Open Homework</a>
-            </div>
-          </li>
-        </ul>
-        <div class="tags">
-          <span class="tag">practice</span>
-          <span class="tag">linux</span>
-          <span class="tag">commands</span>
-        </div>
+    <div class="panel" id="panel-linux-cheatsheets">
+      <div class="bc">🐧 Linux <span class="bc-sep">›</span> <b>📋 Cheatsheets</b></div>
+      <div class="fgrid">
+        {% for p in linux_cheatsheets %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📋</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Cheatsheet</div>
+          </div>
+        </a>
+        {% endfor %}
+        {% for f in linux_cheat_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📄</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Cheatsheet</div>
+          </div>
+        </a>
+        {% endfor %}
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Coming Soon Section -->
-<div id="coming-soon" class="content-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">🚀 Coming Soon</h2>
-      <p class="section-description">More exciting topics will be added to the course</p>
-    </div>
-    
-    <div class="grid coming-soon">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🐳</div>
-          <h3 class="card-title">Docker</h3>
-        </div>
-        <p class="card-description">Containerization and Docker fundamentals for building and deploying applications</p>
-        <div class="tags">
-          <span class="tag">containers</span>
-          <span class="tag">virtualization</span>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">☸️</div>
-          <h3 class="card-title">Kubernetes</h3>
-        </div>
-        <p class="card-description">Container orchestration and cluster management with Kubernetes</p>
-        <div class="tags">
-          <span class="tag">orchestration</span>
-          <span class="tag">clusters</span>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🔄</div>
-          <h3 class="card-title">Git & GitHub</h3>
-        </div>
-        <p class="card-description">Version control, branching strategies, and collaborative development</p>
-        <div class="tags">
-          <span class="tag">version-control</span>
-          <span class="tag">collaboration</span>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🔧</div>
-          <h3 class="card-title">CI/CD</h3>
-        </div>
-        <p class="card-description">Continuous Integration and Continuous Deployment pipelines with Jenkins, GitHub Actions</p>
-        <div class="tags">
-          <span class="tag">automation</span>
-          <span class="tag">pipelines</span>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🏗️</div>
-          <h3 class="card-title">Terraform</h3>
-        </div>
-        <p class="card-description">Infrastructure as Code for cloud resource provisioning and management</p>
-        <div class="tags">
-          <span class="tag">iac</span>
-          <span class="tag">cloud</span>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">📊</div>
-          <h3 class="card-title">Monitoring</h3>
-        </div>
-        <p class="card-description">Prometheus, Grafana, and observability for DevSecOps</p>
-        <div class="tags">
-          <span class="tag">observability</span>
-          <span class="tag">metrics</span>
-        </div>
+    <div class="panel" id="panel-linux-pdf">
+      <div class="bc">🐧 Linux <span class="bc-sep">›</span> <b>📄 PDF Resources</b></div>
+      <div class="fgrid">
+        {% for f in linux_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📄</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Document</div>
+          </div>
+        </a>
+        {% endfor %}
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- ── Python panels ── -->
+    <div class="panel" id="panel-python-lessons">
+      <div class="bc">🐍 Python <span class="bc-sep">›</span> <b>📚 Lessons</b></div>
+      <div class="fgrid">
+        {% for p in python_lessons %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📝</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lesson</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-python-labs">
+      <div class="bc">🐍 Python <span class="bc-sep">›</span> <b>🔬 Labs</b></div>
+      <div class="fgrid">
+        {% for p in python_labs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">🔬</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lab</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-python-cheatsheets">
+      <div class="bc">🐍 Python <span class="bc-sep">›</span> <b>📋 Cheatsheets</b></div>
+      <div class="fgrid">
+        {% for f in python_cheat_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📋</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Cheatsheet</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-python-pdf">
+      <div class="bc">🐍 Python <span class="bc-sep">›</span> <b>📄 PDF Resources</b></div>
+      <div class="fgrid">
+        {% for f in python_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📄</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Document</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-python-classcode">
+      <div class="bc">🐍 Python <span class="bc-sep">›</span> <b>👨‍💻 Class Code</b></div>
+      <div class="fgrid">
+        {% for f in python_classcode %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">🐍</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename }}.py</div>
+            <div class="fcard-type">Python · Script</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ── GIT panels ── -->
+    <div class="panel" id="panel-git-lessons">
+      <div class="bc">🌿 GIT <span class="bc-sep">›</span> <b>📚 Lessons</b></div>
+      <div class="fgrid">
+        {% for p in git_lessons %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📝</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lesson</div>
+          </div>
+        </a>
+        {% else %}
+        <div class="empty">No lessons published yet</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-git-pdf">
+      <div class="bc">🌿 GIT <span class="bc-sep">›</span> <b>📄 PDF Resources</b></div>
+      <div class="fgrid">
+        {% for f in git_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📄</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Document</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /workspace -->
 
 <script>
-// Show section
-function showSection(section) {
-  // Hide all sections
-  document.querySelectorAll('.content-section').forEach(s => {
-    s.classList.remove('active');
-  });
-  
-  // Remove active class from all tabs
-  document.querySelectorAll('.nav-tab').forEach(t => {
-    t.classList.remove('active');
-  });
-  
-  // Show selected section
-  document.getElementById(section).classList.add('active');
-  
-  // Add active class to clicked tab
-  event.target.closest('.nav-tab').classList.add('active');
+var activePanel = null;
+var activeCat   = null;
+
+function toggleSubj(id, el) {
+  var kids = document.getElementById('subj-' + id);
+  var arr  = document.getElementById('arr-' + id);
+  kids.classList.toggle('open');
+  arr.classList.toggle('open');
+  el.classList.toggle('open');
 }
 
-// Animate counters on load
-document.addEventListener('DOMContentLoaded', function() {
-  animateCounter('lessonsCount', {{ linux_lessons | size }});
-  animateCounter('labsCount', {{ linux_labs | size }});
-  animateCounter('cheatsheetsCount', {{ linux_cheatsheets | size }});
-});
+function openCat(id, catEl) {
+  var treeKids = document.getElementById('files-' + id);
+  var arr      = document.getElementById('arr-' + id);
+  treeKids.classList.toggle('open');
+  arr.classList.toggle('open');
 
-function animateCounter(id, target) {
-  const element = document.getElementById(id);
-  const duration = 1500;
-  const step = target / (duration / 16);
-  let current = 0;
-  
-  const timer = setInterval(() => {
-    current += step;
-    if (current >= target) {
-      element.textContent = target;
-      clearInterval(timer);
-    } else {
-      element.textContent = Math.floor(current);
-    }
-  }, 16);
+  if (activeCat) activeCat.classList.remove('sel');
+  catEl.classList.add('sel');
+  activeCat = catEl;
+
+  document.getElementById('welcome').style.display = 'none';
+  if (activePanel) activePanel.classList.remove('active');
+  activePanel = document.getElementById('panel-' + id);
+  if (activePanel) activePanel.classList.add('active');
 }
 </script>
