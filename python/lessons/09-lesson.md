@@ -134,6 +134,7 @@ Idempotence: An HTTP method is idempotent if making the same request multiple ti
 
 ## Complete Request/Response Flow
 
+```
 USER ACTION: Clicks "Place Order" button
 │
 ▼
@@ -233,11 +234,12 @@ USER ACTION: Clicks "Place Order" button
 │ - Updates DOM with new order │
 │ - Shows success message to user │
 └──────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Types of HTTP Requests (Visual Chart)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐────┐
+┌─────────────────────────────────────────────────────────────────────────────────┐
 │                           HTTP REQUEST METHODS COMPLETE CHART                       │
 ├──────────────┬─────────────┬──────────────┬────────────┬────────────┬───────────────┤
 │    METHOD    │   CRUD      │  HAS BODY?   │IDEMPOTENT? │  SAFE?     │   CACHEABLE?  │
@@ -374,6 +376,7 @@ USER ACTION: Clicks "Place Order" button
 
 ## Synchronous vs Asynchronous Flow
 
+```
 Client Server Database
 │ │ │
 │──── POST /orders ──────→│ │
@@ -419,10 +422,10 @@ Client API Gateway Message Queue Worker Database
 
 ```
 
-
 # Common Architecture Patterns
 
 - 1. Monolithic Architecture (Simple)
+
 ```
 
 ┌─────────────────────────────────────┐
@@ -434,13 +437,14 @@ Client API Gateway Message Queue Worker Database
 └─────────────────────────────────────┘
 
 ```
+
     ✅ Simple to build
     ✅ Easy to deploy
     ❌ Hard to scale
     ❌ One bug breaks everything
 
-
 - 2. Microservices Architecture (Advanced)
+
 ```
 
 ┌──────────┐ ┌──────────┐ ┌──────────┐
@@ -461,12 +465,14 @@ Client API Gateway Message Queue Worker Database
 └──────┘
 
 ```
+
     ✅ Independent scaling
     ✅ Different technologies per service
     ❌ Complex to manage
     ❌ Network latency
 
 - 3. Layered (N-Tier) Architecture (Most Common)
+
 ```
 
 ┌────────────┐
@@ -482,12 +488,14 @@ Client API Gateway Message Queue Worker Database
 └────────────┘
 
 ```
+
     ✅ Separation of concerns
     ✅ Each layer can scale independently
     ✅ Easier to maintain
     ❌ Extra network hops
 
 # main flow
+
 ```
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -565,9 +573,5 @@ Client API Gateway Message Queue Worker Database
 │ 22. Update DOM
 │
 ▼
-USER (Sees result)
-
-```
-
-
+    USER (Sees result)
 ```
