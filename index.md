@@ -18,6 +18,8 @@ title: DevSecOps-22
 {% assign git_lessons         = site.pages | where_exp: "p", "p.url contains '/GIT/lessons/'" | sort: "url" %}
 {% assign git_pdfs            = site.static_files | where_exp: "f", "f.path contains '/GIT/PDF/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
 
+{% assign projects            = site.pages | where_exp: "p", "p.url contains '/projects/'" | sort: "url" %}
+
 <style>
 /* ── Reset & layout override ─────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -79,7 +81,8 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 }
 .chip.linux  { border-color: #4fc3f7; color: #4fc3f7; }
 .chip.python { border-color: #4ec9b0; color: #4ec9b0; }
-.chip.git    { border-color: #e2c08d; color: #e2c08d; }
+.chip.git      { border-color: #e2c08d; color: #e2c08d; }
+.chip.projects { border-color: #f59e0b; color: #f59e0b; }
 
 .topbar-hw {
   margin-left: auto;
@@ -301,6 +304,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
     <span class="chip linux">🐧 Linux</span>
     <span class="chip python">🐍 Python</span>
     <span class="chip git">🌿 GIT</span>
+    <span class="chip projects">🚀 Projects</span>
   </div>
   <a class="topbar-hw" href="{{ site.baseurl }}/homeworks/linux-homework/">📝 Homework</a>
 </div>
@@ -406,6 +410,24 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 
       </div>
 
+      <!-- ╔══ PROJECTS ══╗ -->
+      <div class="t-subj" onclick="toggleSubj('projects',this)">
+        <span class="arr" id="arr-projects">▶</span>
+        <span>🚀</span><span>Projects</span>
+        <span class="cnt">{{ projects.size }}</span>
+      </div>
+      <div class="t-kids" id="subj-projects">
+
+        <div class="t-cat" onclick="openCat('projects-files',this)" id="cat-projects-files">
+          <span class="arr" id="arr-projects-files">▶</span><span>📁</span><span>projects</span>
+          <span class="cnt">{{ projects.size }}</span>
+        </div>
+        <div class="t-kids" id="files-projects-files">
+          {% for p in projects %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+      </div>
+
       <!-- ╔══ GIT ══╗ -->
       <div class="t-subj" onclick="toggleSubj('git',this)">
         <span class="arr" id="arr-git">▶</span>
@@ -447,6 +469,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
         <span class="w-pill">🐧 Linux</span>
         <span class="w-pill">🐍 Python</span>
         <span class="w-pill">🌿 GIT</span>
+        <span class="w-pill">🚀 Projects</span>
       </div>
     </div>
 
@@ -592,6 +615,24 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
             <div class="fcard-type">Python · Script</div>
           </div>
         </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ── Projects panels ── -->
+    <div class="panel" id="panel-projects-files">
+      <div class="bc">🚀 Projects <span class="bc-sep">›</span> <b>📁 Projects</b></div>
+      <div class="fgrid">
+        {% for p in projects %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">🚀</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Project</div>
+          </div>
+        </a>
+        {% else %}
+        <div class="empty">No projects published yet</div>
         {% endfor %}
       </div>
     </div>

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Python Lesson 7 - Functions
+title: Python Lesson 8 - pip and venv
 ---
 # Python Packaging & Environments 
 
