@@ -1,3 +1,8 @@
+---
+layout: default
+title: Python Object-Oriented Programming (OOP)
+---
+
 # Python Object-Oriented Programming (OOP) - Complete Tutorial
 
 ## Table of Contents
