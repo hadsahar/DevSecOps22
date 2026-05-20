@@ -18,6 +18,12 @@ title: DevSecOps-22
 {% assign git_lessons         = site.pages | where_exp: "p", "p.url contains '/GIT/lessons/'" | sort: "url" %}
 {% assign git_pdfs            = site.static_files | where_exp: "f", "f.path contains '/GIT/PDF/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
 
+{% assign docker_lessons      = site.pages | where_exp: "p", "p.url contains '/docker/lessons/'" | sort: "url" %}
+{% assign docker_labs         = site.pages | where_exp: "p", "p.url contains '/docker/labs/'" | sort: "url" %}
+{% assign docker_cheatsheets  = site.pages | where_exp: "p", "p.url contains '/docker/cheatsheet/'" | sort: "url" %}
+{% assign docker_classcode    = site.pages | where_exp: "p", "p.url contains '/docker/classcode/'" | sort: "url" %}
+{% assign docker_pdfs         = site.static_files | where_exp: "f", "f.path contains '/docker/pdf/'" | where_exp: "f", "f.extname == '.pdf'" | sort: "path" %}
+
 {% assign projects            = site.pages | where_exp: "p", "p.url contains '/projects/'" | sort: "url" %}
 
 <style>
@@ -82,6 +88,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 .chip.linux  { border-color: #4fc3f7; color: #4fc3f7; }
 .chip.python { border-color: #4ec9b0; color: #4ec9b0; }
 .chip.git      { border-color: #e2c08d; color: #e2c08d; }
+.chip.docker   { border-color: #0db7ed; color: #0db7ed; }
 .chip.projects { border-color: #f59e0b; color: #f59e0b; }
 
 .topbar-hw {
@@ -304,6 +311,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
     <span class="chip linux">🐧 Linux</span>
     <span class="chip python">🐍 Python</span>
     <span class="chip git">🌿 GIT</span>
+    <span class="chip docker">🐳 Docker</span>
     <span class="chip projects">🚀 Projects</span>
   </div>
   <a class="topbar-hw" href="{{ site.baseurl }}/homeworks/linux-homework/">📝 Homework</a>
@@ -454,6 +462,56 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 
       </div>
 
+      <!-- ╔══ DOCKER ══╗ -->
+      <div class="t-subj" onclick="toggleSubj('docker',this)">
+        <span class="arr" id="arr-docker">▶</span>
+        <span>🐳</span><span>Docker</span>
+        <span class="cnt">{{ docker_lessons.size | plus: docker_labs.size | plus: docker_cheatsheets.size | plus: docker_classcode.size | plus: docker_pdfs.size }}</span>
+      </div>
+      <div class="t-kids" id="subj-docker">
+
+        <div class="t-cat" onclick="openCat('docker-lessons',this)" id="cat-docker-lessons">
+          <span class="arr" id="arr-docker-lessons">▶</span><span>📚</span><span>lessons</span>
+          <span class="cnt">{{ docker_lessons.size }}</span>
+        </div>
+        <div class="t-kids" id="files-docker-lessons">
+          {% for p in docker_lessons %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('docker-labs',this)" id="cat-docker-labs">
+          <span class="arr" id="arr-docker-labs">▶</span><span>🔬</span><span>labs</span>
+          <span class="cnt">{{ docker_labs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-docker-labs">
+          {% for p in docker_labs %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('docker-cheatsheets',this)" id="cat-docker-cheatsheets">
+          <span class="arr" id="arr-docker-cheatsheets">▶</span><span>📋</span><span>cheatsheets</span>
+          <span class="cnt">{{ docker_cheatsheets.size }}</span>
+        </div>
+        <div class="t-kids" id="files-docker-cheatsheets">
+          {% for p in docker_cheatsheets %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('docker-classcode',this)" id="cat-docker-classcode">
+          <span class="arr" id="arr-docker-classcode">▶</span><span>👨‍💻</span><span>classcode</span>
+          <span class="cnt">{{ docker_classcode.size }}</span>
+        </div>
+        <div class="t-kids" id="files-docker-classcode">
+          {% for p in docker_classcode %}<a class="t-file" href="{{ site.baseurl }}{{ p.url }}">📝 {{ p.title | default: p.name }}</a>{% endfor %}
+        </div>
+
+        <div class="t-cat" onclick="openCat('docker-pdf',this)" id="cat-docker-pdf">
+          <span class="arr" id="arr-docker-pdf">▶</span><span>📄</span><span>pdf</span>
+          <span class="cnt">{{ docker_pdfs.size }}</span>
+        </div>
+        <div class="t-kids" id="files-docker-pdf">
+          {% for f in docker_pdfs %}<a class="t-file" href="{{ site.baseurl }}{{ f.path }}" target="_blank">📄 {{ f.basename }}</a>{% endfor %}
+        </div>
+
+      </div>
+
     </div>
 
   </div><!-- /sidebar -->
@@ -469,7 +527,8 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
         <span class="w-pill">🐧 Linux</span>
         <span class="w-pill">🐍 Python</span>
         <span class="w-pill">🌿 GIT</span>
-        <span class="w-pill">🚀 Projects</span>
+        <span class="w-pill">� Docker</span>
+        <span class="w-pill">� Projects</span>
       </div>
     </div>
 
@@ -659,6 +718,82 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
       <div class="bc">🌿 GIT <span class="bc-sep">›</span> <b>📄 PDF Resources</b></div>
       <div class="fgrid">
         {% for f in git_pdfs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
+          <span class="fcard-ico">📄</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ f.basename | replace: '-', ' ' | replace: '_', ' ' }}</div>
+            <div class="fcard-type">PDF · Document</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ── Docker panels ── -->
+    <div class="panel" id="panel-docker-lessons">
+      <div class="bc">🐳 Docker <span class="bc-sep">›</span> <b>📚 Lessons</b></div>
+      <div class="fgrid">
+        {% for p in docker_lessons %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📝</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lesson</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-docker-labs">
+      <div class="bc">🐳 Docker <span class="bc-sep">›</span> <b>🔬 Labs</b></div>
+      <div class="fgrid">
+        {% for p in docker_labs %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">🔬</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Lab</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-docker-cheatsheets">
+      <div class="bc">🐳 Docker <span class="bc-sep">›</span> <b>📋 Cheatsheets</b></div>
+      <div class="fgrid">
+        {% for p in docker_cheatsheets %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">📋</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Cheatsheet</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-docker-classcode">
+      <div class="bc">🐳 Docker <span class="bc-sep">›</span> <b>👨‍💻 Class Code</b></div>
+      <div class="fgrid">
+        {% for p in docker_classcode %}
+        <a class="fcard" href="{{ site.baseurl }}{{ p.url }}">
+          <span class="fcard-ico">👨‍💻</span>
+          <div class="fcard-info">
+            <div class="fcard-name">{{ p.title | default: p.name }}</div>
+            <div class="fcard-type">Markdown · Class Code</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel" id="panel-docker-pdf">
+      <div class="bc">🐳 Docker <span class="bc-sep">›</span> <b>📄 PDF Resources</b></div>
+      <div class="fgrid">
+        {% for f in docker_pdfs %}
         <a class="fcard" href="{{ site.baseurl }}{{ f.path }}" target="_blank">
           <span class="fcard-ico">📄</span>
           <div class="fcard-info">
