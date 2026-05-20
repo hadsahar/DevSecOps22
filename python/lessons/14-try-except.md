@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Python Exception Handling: Try-Except and Custom Exceptions
+title: "Python Exception Handling: Try-Except and Custom Exceptions"
 ---
 
 # Python Exception Handling: Try-Except and Custom Exceptions
@@ -30,13 +30,13 @@ title: Python Exception Handling: Try-Except and Custom Exceptions
 
 ### Why Handle Exceptions?
 
-| Benefit | Description |
-|---------|-------------|
-| **Prevent Crashes** | Gracefully handle errors instead of crashing |
-| **User Experience** | Provide meaningful error messages |
-| **Debugging** | Log errors for troubleshooting |
+| Benefit              | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| **Prevent Crashes**  | Gracefully handle errors instead of crashing     |
+| **User Experience**  | Provide meaningful error messages                |
+| **Debugging**        | Log errors for troubleshooting                   |
 | **Resource Cleanup** | Ensure resources (files, connections) are closed |
-| **Recovery** | Allow program to continue after error |
+| **Recovery**         | Allow program to continue after error            |
 
 ### Exception Hierarchy
 
@@ -109,18 +109,18 @@ except FileNotFoundError:
 
 ### Common Built-in Exceptions
 
-| Exception | When Raised | Example |
-|-----------|-------------|---------|
-| `ZeroDivisionError` | Division by zero | `10 / 0` |
-| `ValueError` | Invalid value for operation | `int("abc")` |
-| `TypeError` | Operation on wrong type | `"2" + 3` |
-| `IndexError` | Index out of range | `list[10]` on list of 5 items |
-| `KeyError` | Key not found in dictionary | `dict['missing']` |
-| `AttributeError` | Invalid attribute access | `"hello".length` |
-| `FileNotFoundError` | File doesn't exist | `open('missing.txt')` |
-| `NameError` | Name not defined | `print(undefined_var)` |
-| `ImportError` | Module not found | `import nonexistent_module` |
-| `RuntimeError` | Generic runtime error | `raise RuntimeError()` |
+| Exception           | When Raised                 | Example                       |
+| ------------------- | --------------------------- | ----------------------------- |
+| `ZeroDivisionError` | Division by zero            | `10 / 0`                      |
+| `ValueError`        | Invalid value for operation | `int("abc")`                  |
+| `TypeError`         | Operation on wrong type     | `"2" + 3`                     |
+| `IndexError`        | Index out of range          | `list[10]` on list of 5 items |
+| `KeyError`          | Key not found in dictionary | `dict['missing']`             |
+| `AttributeError`    | Invalid attribute access    | `"hello".length`              |
+| `FileNotFoundError` | File doesn't exist          | `open('missing.txt')`         |
+| `NameError`         | Name not defined            | `print(undefined_var)`        |
+| `ImportError`       | Module not found            | `import nonexistent_module`   |
+| `RuntimeError`      | Generic runtime error       | `raise RuntimeError()`        |
 
 ### Examples
 
@@ -443,13 +443,13 @@ class InsufficientFundsError(CustomError):
 ```python
 class InsufficientFundsError(Exception):
     """Exception for insufficient bank balance"""
-    
+
     def __init__(self, balance, required):
         self.balance = balance
         self.required = required
         message = f"Insufficient funds: ${balance} available, ${required} required"
         super().__init__(message)
-    
+
     def __str__(self):
         return f"Balance: ${self.balance}, Required: ${self.required}"
 
@@ -471,13 +471,13 @@ except InsufficientFundsError as e:
 ```python
 class ValidationError(Exception):
     """Custom validation exception with details"""
-    
+
     def __init__(self, field, value, message):
         self.field = field
         self.value = value
         self.message = message
         super().__init__(f"{field}: {message}")
-    
+
     def get_details(self):
         return {
             'field': self.field,
@@ -529,7 +529,7 @@ def transfer(from_account, to_account, amount):
         raise InvalidAmountError(f"Invalid transfer amount: {amount}")
     if from_account.balance < amount:
         raise InsufficientFundsError(
-            from_account.balance, 
+            from_account.balance,
             amount
         )
     # Process transfer
@@ -550,13 +550,13 @@ except BankError as e:
 ```python
 class APIError(Exception):
     """Custom exception for API errors"""
-    
+
     def __init__(self, status_code, message, details=None):
         self.status_code = status_code
         self.message = message
         self.details = details or {}
         super().__init__(f"{status_code}: {message}")
-    
+
     def to_dict(self):
         return {
             'status_code': self.status_code,
@@ -687,12 +687,12 @@ class FileHandler:
         self.filename = filename
         self.mode = mode
         self.file = None
-    
+
     def __enter__(self):
         print(f"Opening {self.filename}")
         self.file = open(self.filename, self.mode)
         return self.file
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("Closing file")
         if self.file:
@@ -935,15 +935,15 @@ def process_file(filename):
         # Check if file exists
         if not os.path.exists(filename):
             raise FileNotFoundError(f"File not found: {filename}")
-        
+
         # Open and read file
         with open(filename, 'r') as file:
             content = file.read()
-        
+
         # Process content
         lines = content.splitlines()
         return len(lines)
-        
+
     except FileNotFoundError as e:
         print(f"Error: {e}")
         return 0
@@ -979,16 +979,16 @@ def fetch_data(url, headers=None):
     try:
         import requests
         response = requests.get(url, headers=headers)
-        
+
         if response.status_code == 401:
             raise AuthenticationError("Invalid API key")
         elif response.status_code == 429:
             raise RateLimitError("Rate limit exceeded")
         elif response.status_code >= 400:
             raise APIError(f"API error: {response.status_code}")
-        
+
         return response.json()
-        
+
     except requests.RequestException as e:
         raise APIError(f"Request failed: {e}")
 
@@ -1086,7 +1086,7 @@ class MaxRetriesExceededError(Exception):
 def retry_operation(operation, max_retries=3, delay=1):
     """Retry operation with exponential backoff"""
     last_error = None
-    
+
     for attempt in range(max_retries):
         try:
             return operation()
@@ -1095,7 +1095,7 @@ def retry_operation(operation, max_retries=3, delay=1):
             print(f"Attempt {attempt + 1} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(delay * (2 ** attempt))  # Exponential backoff
-    
+
     raise MaxRetriesExceededError(
         f"Operation failed after {max_retries} attempts. Last error: {last_error}"
     )
@@ -1120,16 +1120,16 @@ except MaxRetriesExceededError as e:
 
 ### Key Concepts
 
-| Concept | Description |
-|---------|-------------|
-| **Try-Except** | Catch and handle exceptions |
+| Concept                 | Description                             |
+| ----------------------- | --------------------------------------- |
+| **Try-Except**          | Catch and handle exceptions             |
 | **Multiple Exceptions** | Handle different exceptions differently |
-| **Else Block** | Execute if no exception occurred |
-| **Finally Block** | Always execute (cleanup) |
-| **Raise** | Manually raise exceptions |
-| **Custom Exceptions** | Create domain-specific exceptions |
-| **Exception Chaining** | Link related exceptions |
-| **Context Managers** | Automatic resource management |
+| **Else Block**          | Execute if no exception occurred        |
+| **Finally Block**       | Always execute (cleanup)                |
+| **Raise**               | Manually raise exceptions               |
+| **Custom Exceptions**   | Create domain-specific exceptions       |
+| **Exception Chaining**  | Link related exceptions                 |
+| **Context Managers**    | Automatic resource management           |
 
 ### Best Practices Recap
 

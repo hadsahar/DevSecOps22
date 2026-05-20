@@ -3,7 +3,7 @@ layout: default
 title: Python Lesson 11 - Flask Web Framework
 ---
 
-# Flask Web Framework 
+# Flask Web Framework
 
 Flask is a lightweight, micro web framework for Python. It's perfect for building REST APIs, web applications, and microservices. This lesson covers everything from basics to advanced concepts.
 
@@ -14,6 +14,7 @@ Flask is a lightweight, micro web framework for Python. It's perfect for buildin
 Flask is a **WSGI** (Web Server Gateway Interface) micro-framework. "Micro" means it doesn't require particular tools or libraries — it keeps the core simple but extensible.
 
 **Key Features:**
+
 - Lightweight and modular
 - Built-in development server
 - RESTful request dispatching
@@ -30,6 +31,7 @@ pip install flask
 ```
 
 Verify installation:
+
 ```python
 import flask
 print(flask.__version__)
@@ -52,6 +54,7 @@ app.run(port=5000, debug=True)
 ```
 
 **Explanation:**
+
 - `Flask(__name__)` — Creates the Flask application instance
 - `@app.get('/')` — Decorator that binds a URL route to a function
 - `app.run()` — Starts the development server
@@ -169,25 +172,25 @@ app = Flask(__name__)
 def login():
     # JSON data
     data = request.get_json()
-    
+
     # Form data
     username = request.form.get('username')
-    
+
     # Query parameters (?key=value)
     page = request.args.get('page', default=1, type=int)
-    
+
     # Headers
     auth_header = request.headers.get('Authorization')
-    
+
     # Request method
     method = request.method
-    
+
     # Full URL
     url = request.url
-    
+
     # Client IP
     ip = request.remote_addr
-    
+
     return {'status': 'ok'}
 ```
 
@@ -240,16 +243,16 @@ def custom_response():
 
 ### Common HTTP Status Codes
 
-| Code | Meaning |
-|------|---------|
-| 200 | OK - Success |
-| 201 | Created - Resource created |
-| 204 | No Content - Success with no body |
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Access denied |
-| 404 | Not Found - Resource doesn't exist |
-| 500 | Internal Server Error |
+| Code | Meaning                                |
+| ---- | -------------------------------------- |
+| 200  | OK - Success                           |
+| 201  | Created - Resource created             |
+| 204  | No Content - Success with no body      |
+| 400  | Bad Request - Invalid input            |
+| 401  | Unauthorized - Authentication required |
+| 403  | Forbidden - Access denied              |
+| 404  | Not Found - Resource doesn't exist     |
+| 500  | Internal Server Error                  |
 
 ---
 
@@ -292,11 +295,11 @@ def get_user(id):
 @app.post('/users')
 def create_user():
     data = request.get_json()
-    
+
     # Validation
     if not data or 'username' not in data or 'email' not in data:
         return {'error': 'Missing required fields'}, 400
-    
+
     # Create new user
     new_id = max(u['id'] for u in users) + 1 if users else 1
     new_user = {
@@ -311,10 +314,10 @@ def create_user():
 @app.put('/users/<int:id>')
 def update_user(id):
     data = request.get_json()
-    
+
     if not data or 'username' not in data or 'email' not in data:
         return {'error': 'Missing required fields'}, 400
-    
+
     for i, user in enumerate(users):
         if user['id'] == id:
             users[i] = {
@@ -330,15 +333,15 @@ def update_user(id):
 def patch_user(id):
     data = request.get_json()
     user = find_user(id)
-    
+
     if not user:
         return {'error': 'User not found'}, 404
-    
+
     # Update only provided fields
     for key, value in data.items():
         if key != 'id':  # Prevent ID modification
             user[key] = value
-    
+
     return user
 
 # DELETE - Remove user
@@ -399,6 +402,7 @@ app.run(port=5000, debug=True)
 ```
 
 **The `g` Object:**
+
 - `g` is a global namespace for storing data during a request
 - Data stored in `g` is available throughout the request lifecycle
 - Automatically cleared after each request
@@ -487,35 +491,36 @@ def users():
 ```html
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>{{ title }}</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Welcome to {{ title }}</h1>
-    
+
     {% if users %}
-        <ul>
-        {% for user in users %}
-            <li>{{ user.name }} - Age: {{ user.age }}</li>
-        {% endfor %}
-        </ul>
+    <ul>
+      {% for user in users %}
+      <li>{{ user.name }} - Age: {{ user.age }}</li>
+      {% endfor %}
+    </ul>
     {% else %}
-        <p>No users found.</p>
+    <p>No users found.</p>
     {% endif %}
-</body>
+  </body>
 </html>
 ```
 
 ### Jinja2 Syntax Summary
 
-| Syntax | Purpose |
-|--------|---------|
-| `{{ variable }}` | Output a variable |
-| `{% statement %}` | Control flow (if, for, etc.) |
-| `{# comment #}` | Comments |
-| `{{ variable\|filter }}` | Apply filters |
+| Syntax                                 | Purpose                      |
+| -------------------------------------- | ---------------------------- |
+| `{{ variable }}`                       | Output a variable            |
+| `{% raw %}{% statement %}{% endraw %}` | Control flow (if, for, etc.) |
+| `{# comment #}`                        | Comments                     |
+| `{{ variable\|filter }}`               | Apply filters                |
 
 **Common Filters:**
+
 - `{{ name|upper }}` — Uppercase
 - `{{ name|lower }}` — Lowercase
 - `{{ name|title }}` — Title Case
@@ -531,9 +536,9 @@ Static files (CSS, JS, images) go in the `static/` folder.
 ### In Templates
 
 ```html
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-<img src="{{ url_for('static', filename='images/logo.png') }}">
+<img src="{{ url_for('static', filename='images/logo.png') }}" />
 ```
 
 ---
@@ -576,7 +581,7 @@ def search():
     query = request.args.get('q', default='', type=str)
     page = request.args.get('page', default=1, type=int)
     limit = request.args.get('limit', default=10, type=int)
-    
+
     return {
         'query': query,
         'page': page,
