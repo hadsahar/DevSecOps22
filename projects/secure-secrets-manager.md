@@ -9,7 +9,7 @@ title: Project 2 - Secure Secrets Manager
 
 Build a small-scale secure secrets manager. Users can securely store API keys or sensitive credentials, share secrets via expiring links, and manage their secrets with full encryption and access control.
 
-## 🧪 Endpoints
+##  Endpoints
 
 | Method | Endpoint              | Description                            |
 | ------ | --------------------- | -------------------------------------- |
