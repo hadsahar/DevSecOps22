@@ -1,0 +1,258 @@
+================================================================
+       DEVSECOPS BASH TRAINING LAB - ALL EXERCISES
+================================================================
+
+----------------------------------------------------------------
+                     QUICK CLASS EXERCISE (exercise1.md)
+             Tools: ls, cat, echo, grep, sort, awk, cp, mv, mkdir, alias
+----------------------------------------------------------------
+
+TASK 1
+  - Create 2 directories: dir1/ and dir2/
+
+TASK 2
+  Add into personal_data.txt the following data using `echo` with commands only:
+  - Check who you are
+  - Check where you are
+  - Explore the current working dir (/)
+  - List all the files in / including hidden ones
+  - Show the files and dirs in /var sorted by size (human-readable)
+
+TASK 3
+  Show the data collected in personal_data.txt in reverse sorted view with line numbering
+
+
+================================================================
+                   MAIN TASKS (tasks.md)
+================================================================
+
+PART 1 — File System Navigation (ls)
+--------------------------------------
+
+Task 1.1 - Basic Listing
+  List all files in your home directory.
+  Identify which files are regular files vs directories.
+
+Task 1.2 - Hidden Files
+  There are 3 hidden files in your home directory.
+  Find them and list their names.
+
+Task 1.3 - Detailed Listing
+  List all files with detailed info (permissions, owner, size, date).
+  Which file has 600 permissions?
+
+Task 1.4 - Sorting by Size
+  List files sorted by size (largest first).
+  What is the largest file in your home directory?
+
+Task 1.5 - Human Readable Sizes
+  List all files with human-readable sizes (KB, MB).
+  How large is large_file.bin?
+
+
+PART 2 — Viewing & Creating Content (cat, echo)
+-------------------------------------------------
+
+Task 2.1 - View File Content
+  Display the contents of file.txt and file2.txt.
+  Count how many lines contain the word "DevOps".
+
+Task 2.2 - Create a New File
+  Use echo with redirection to create myinfo.txt containing:
+    My name is: [your name]
+    Today's date: $(date)
+    Current directory: $(pwd)
+
+Task 2.3 - Append to File
+  Append "Learning Linux commands" to myinfo.txt using echo with append redirection.
+
+Task 2.4 - Concatenate Files
+  Combine file.txt and file2.txt into combined.txt using cat.
+
+
+PART 3 — Searching & Filtering (grep)
+---------------------------------------
+
+Task 3.1 - Basic Pattern Search
+  Search for all lines containing "DevOps" in combined.txt.
+  Is it case-sensitive?
+
+Task 3.2 - Case-Insensitive Search
+  Find all lines containing "devops", "DevOps", or "DEVOPS" in combined.txt (case-insensitive).
+
+Task 3.3 - Count Matches
+  Count how many times "important" appears in all .txt files (case-insensitive).
+
+Task 3.4 - Invert Match
+  Show all lines in access.log that do NOT contain "ERROR".
+
+Task 3.5 - Search Multiple Patterns
+  Find lines in access.log containing either "WARNING" or "ERROR".
+
+Task 3.6 - Extract Emails
+  Use grep with regex to find all lines containing @gmail.com in email.txt.
+
+Task 3.7 - Recursive Search
+  Search for the word "DevOps" in all files under demo/ directory recursively.
+
+
+PART 4 — Sorting & Deduplication (sort, uniq)
+-----------------------------------------------
+
+Task 4.1 - Basic Sort
+  Sort the lines in email.txt alphabetically.
+
+Task 4.2 - Reverse Sort
+  Sort email.txt in reverse alphabetical order.
+
+Task 4.3 - Remove Duplicates
+  email.txt has duplicate entries. Show only unique email addresses.
+
+Task 4.4 - Count Duplicates
+  Show how many times each email appears in email.txt.
+  Hint: sort first, then use uniq -c
+
+Task 4.5 - Sort by Number
+  From Task 4.4 output, sort so the most frequent email appears first.
+
+
+PART 5 — Text Processing (awk)
+--------------------------------
+
+Task 5.1 - Print Specific Columns
+  data.csv has format: ID,Name,Role
+  Use awk to print only the Name and Role columns.
+
+Task 5.2 - Filter by Pattern
+  Use awk to print only lines from data.csv where Role contains "Dev" (DevOps or Backend).
+
+Task 5.3 - Calculate with awk
+  Add line numbers to data.csv output in format: "1. Name, Role"
+  Example: 1. Hothaifa, DevOps
+
+Task 5.4 - Field Separator
+  Parse access.log and print only the log level (first column) and the message (rest of line).
+
+Task 5.5 - Count Lines
+  Use awk to count and print the total number of lines in email.txt.
+
+
+PART 6 — Piping - Combining Commands (|)
+------------------------------------------
+
+Task 6.1 - Pipe Basics
+  Display only the first 5 lines of combined.txt using cat piped to head.
+
+Task 6.2 - Filter Pipeline
+  Find all files in the current directory that contain "DevOps" in their content,
+  then show only the filenames. Hint: grep -l
+
+Task 6.3 - Count Pipeline
+  Count how many files in your home directory end with .txt extension.
+
+Task 6.4 - Multi-Stage Pipeline
+  From access.log, extract all ERROR lines, sort them, remove duplicates, and save to unique_errors.txt.
+
+Task 6.5 - Complex Pipeline
+  Create a pipeline that:
+    1. Reads data.csv
+    2. Skips the header line
+    3. Extracts only the Name column
+    4. Sorts names alphabetically
+    5. Shows line numbers
+
+
+PART 7 — File Operations (cp, mv, mkdir)
+------------------------------------------
+
+Task 7.1 - Create Directory Structure
+  Create the following structure:
+    backup/
+    ├── logs/
+    ├── data/
+    └── scripts/
+
+Task 7.2 - Copy Files
+  Copy all .txt files to backup/ directory. Verify they were copied.
+
+Task 7.3 - Copy with Preserve
+  Copy secure.txt to backup/data/ while preserving its permissions.
+  Check if permissions match.
+
+Task 7.4 - Move Files
+  Move all files starting with "practice_" into a new directory called practice_files/.
+
+Task 7.5 - Rename File
+  Rename maon.py to main.py.
+
+Task 7.6 - Move with Wildcard
+  Move all .log files to backup/logs/.
+
+
+PART 8 — Challenge Tasks
+--------------------------
+
+Challenge 1 - System Report
+  Create a script that generates system_report.txt containing:
+    - Current date and time
+    - Current user
+    - Number of files in home directory
+    - Number of directories in home directory
+    - List of all unique email domains from email.txt (extract domain after @)
+  Use: echo, date, whoami, ls, grep, cut, sort, uniq
+
+Challenge 2 - Log Analyzer
+  Analyze access.log and produce a summary:
+    Total lines: X
+    ERROR count: X
+    WARNING count: X
+    INFO count: X
+  Use: wc -l, grep -c, echo with append redirection
+
+Challenge 3 - CSV Processor
+  Process data.csv to create devops_team.txt with names of people in DevOps roles, formatted as:
+    DevOps Team Members
+    ===================
+    1. Hothaifa
+  Use: grep, awk, output redirection
+
+Challenge 4 - Find Large Files
+  Find all files larger than 1KB in home directory.
+  Save the list (human-readable sizes) to large_files.txt, sorted by size.
+  Use: find, ls -lh, sort, piping
+
+
+BONUS — Aliases
+----------------
+  The training environment has these built-in aliases:
+    lsort  →  lists files sorted by size, human-readable
+    cls    →  clears the screen
+
+  Create your own alias llog that shows the last 3 lines of access.log.
+
+
+================================================================
+                   VERIFICATION COMMANDS
+================================================================
+
+  # Check Task 1.2 - hidden files
+  ls -la ~ | grep '^\.' | wc -l
+
+  # Check Task 3.3 - count "important"
+  grep -ri "important" ~/*.txt 2>/dev/null | wc -l
+
+  # Check Task 4.3 - unique emails
+  sort email.txt | uniq | wc -l
+
+  # Check Task 7.2 - copied files
+  ls backup/*.txt 2>/dev/null | wc -l
+
+
+================================================================
+                        SUBMISSION
+================================================================
+
+  When done, create a tar archive of your work:
+  tar -czvf completed_exercises.tar.gz ~/backup ~/practice_files ~/myinfo.txt ~/system_report.txt
+
+================================================================
