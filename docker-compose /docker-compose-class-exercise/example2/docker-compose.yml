@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  web:
+    image: xo-fe:latest
+    ports:
+      - 80:80
+    restart: always
+    networks:
+      - fronend-tier
+    depends_on:
+      - server
+    # deploy:
+      # replicas: 3
+      # resources:
+      #   limits:
+      #     cpus: 0.5
+      #     memory: 500m
+      #   reservations:
+      #     cpus: 0.2
+      #     memory: 400m
+  server:
+    image: xo-be:latest
+    ports:
+      - 5001:5000
+    restart: always–
+    networks:
+      - backend-tier
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres 
+      - POSTGRES_DB=xogame
+    networks:
+      - backend-tier
+        
+volumes:
+  xo:
+networks:
+  fronend-tier:
+  backend-tier: 
+   
+
+
+   # db -> be -> frontend

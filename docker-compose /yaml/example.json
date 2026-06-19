@@ -1,0 +1,17 @@
+[
+    {
+    "name":"hothaifa",
+    "lastname":"zoabi",
+    "age":15,
+    "yes":true
+    },
+    {
+  "student": "guy",
+  "address": {
+  "street": "gehah",
+  "city": "pitah tikva",
+  "number": 4
+        }
+    }
+
+]

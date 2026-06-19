@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  nginx: # container prefix name 
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "9090:80"
+      #- 4020:8008
+    restart: always
+    environment:
+      - database=LOCALRDS
+    volumes:
+      - nginx:/data
+      - dbdata:/db
+    networks:
+      - be-stack
+volumes:
+  nginx: 
+  dbdata:
+networks:
+  be-stack:
+
+# docker run -p 9090:80 \
+#   --name nginx-contianer \
+#   -e database=LOCALRDS
+#   --net docker-compose-class-exercise \
+#   --restart-policy always
+#   nginx:latest

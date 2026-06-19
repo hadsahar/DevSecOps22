@@ -1,0 +1,56 @@
+#key: value sep -> ': '
+
+#data types
+# string 
+
+
+name: hothaifa
+lastname: 'zoabi'
+car: "chery"
+multiline: |
+  this is how we can 
+  assign a multi line value as value
+folded: >
+  this is the code 
+  string folded
+
+# numbers
+
+age: 42
+rate: 3.14
+scientific: 1.0e+5 # 1*10^5
+hex: 0x1A
+octal: 0o17
+
+# boolean
+enabled: true
+disabled: false
+yes_value: yes    # Also true
+no_value: no      # Also false
+
+# null
+
+empty: null
+also_empty: ~
+
+# collections
+
+# array - list
+
+dogs: [maxi,jojo,podmo]
+dogss:
+  - maxi
+  - jojo
+  - podmo
+
+# dictionaty
+student: guy
+address:
+  street: gehah
+  city: pitah tikva
+  number: 
+    lat: 14.090824 
+    lag: 41.421421
+
+---
+name: elad

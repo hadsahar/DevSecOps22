@@ -1,0 +1,22 @@
+Id: 93c60ac8a3c52f940cd465e33da767ba91621045a8711e6f4f0a7a6f77c626f7
+Created: 2026-06-18T15:45:08.631118799Z
+Args:
+  - nginx
+  - -g
+  - daemon off;
+State:
+  Status: running
+  Running: yes
+  Paused: false
+  Restarting: no
+  OOMKilled: false
+Image: sha256:eb649f051f03da0bb9d5907da1dc8d61875ab107a63c72317bf1c45ac0b68b4a
+NetworkSettings: 
+  SandboxID: d9a11123a40488c5b07cf06e526a9087f47d133721fcb509b7641af1f7ea5411
+  Ports:
+    80/tcp:
+      - HostIp: 0.0.0.0
+        HostPort: "80"
+      - HostIp: '::'
+        HostPort: "80"
+---
