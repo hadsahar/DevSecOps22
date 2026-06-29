@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-with-env
+  labels:
+    app: nignx
+    tier: frontend
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:latest
+      ports:
+       - containerPort: 80
+      env:
+       - name: APP_ENV
+         value: TESTING
+       - name: APP_NAME
+         value: NGINX

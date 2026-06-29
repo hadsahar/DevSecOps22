@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: expres-rs
+  labels:
+    app: mongo-exp
+spec:
+  replicas: 3
+  selector:
+   matchLabels:
+     app: mongo-exp
+  template:
+   metadata:
+     name: express-pod
+     labels:
+       app: mongo-exp
+   spec:
+    containers:
+      - name: express
+        image: mongo-express
+        ports:
+         - containerPort: 8081
+        env: 
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: "10.100.11.116"
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: admin
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: admin
+          - name: ME_CONFIG_BASICAUTH_PASSWORD
+            value: elad
+          - name: ME_CONFIG_BASICAUTH_USERNAME
+            value: elad
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-svc
+spec:
+  type: NodePort
+  selector:
+    app: mongo-exp
+  ports:
+  - port: 8081
+    targetPort: 8081
+    nodePort: 30301

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-resources
+  labels:
+    app: nignx
+    tier: frontend
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:latest
+      ports:
+       - containerPort: 80
+      env:
+       - name: APP_ENV
+         value: TESTING
+       - name: APP_NAME
+         value: NGINX
+      resources:
+        requests:
+          memory: 64Mi
+          cpu: 250m
+        limits:
+          memory: 128Mi
+          cpu: 500m
+      
