@@ -52,13 +52,13 @@ The application is already coded and working. By the end of this lab you will ha
 
 ### Services
 
-| Service | Language | Port (internal) | Role |
-|---------|----------|-----------------|------|
-| `postgres` | PostgreSQL 16 | 5432 | Relational database |
-| `jobs-service` | Python 3.12 / FastAPI | 8000 | Job listings CRUD |
-| `applications-service` | Node.js 20 / Express | 3001 | Job applications CRUD |
-| `frontend` | React 18 / Vite → nginx | 80 | Single-page app |
-| `nginx` | Nginx 1.27 | **80** (external) | Reverse proxy |
+| Service                | Language                | Port (internal)   | Role                  |
+| ---------------------- | ----------------------- | ----------------- | --------------------- |
+| `postgres`             | PostgreSQL 16           | 5432              | Relational database   |
+| `jobs-service`         | Python 3.12 / FastAPI   | 8000              | Job listings CRUD     |
+| `applications-service` | Node.js 20 / Express    | 3001              | Job applications CRUD |
+| `frontend`             | React 18 / Vite → nginx | 80                | Single-page app       |
+| `nginx`                | Nginx 1.27              | **80** (external) | Reverse proxy         |
 
 ### Request Flow
 
@@ -172,25 +172,25 @@ You should see the Job Board with 5 seeded job listings.
 
 ### Jobs Service — `http://localhost/api/jobs`
 
-| Method | Path | Description | Body |
-|--------|------|-------------|------|
-| `GET` | `/jobs/` | List all jobs | — |
-| `POST` | `/jobs/` | Create a job | `{title, description, company, location, salary_range?}` |
-| `GET` | `/jobs/{id}` | Get a job | — |
-| `PUT` | `/jobs/{id}` | Update a job | `{title, description, company, location, salary_range?}` |
-| `DELETE` | `/jobs/{id}` | Delete a job | — |
-| `GET` | `/health` | Health check | — |
+| Method   | Path         | Description   | Body                                                     |
+| -------- | ------------ | ------------- | -------------------------------------------------------- |
+| `GET`    | `/jobs/`     | List all jobs | —                                                        |
+| `POST`   | `/jobs/`     | Create a job  | `{title, description, company, location, salary_range?}` |
+| `GET`    | `/jobs/{id}` | Get a job     | —                                                        |
+| `PUT`    | `/jobs/{id}` | Update a job  | `{title, description, company, location, salary_range?}` |
+| `DELETE` | `/jobs/{id}` | Delete a job  | —                                                        |
+| `GET`    | `/health`    | Health check  | —                                                        |
 
 ### Applications Service — `http://localhost/api/applications`
 
-| Method | Path | Description | Body |
-|--------|------|-------------|------|
-| `GET` | `/applications/` | List all applications | — |
-| `POST` | `/applications/` | Submit an application | `{job_id, applicant_name, applicant_email, cover_letter?}` |
-| `GET` | `/applications/{id}` | Get an application | — |
-| `GET` | `/applications/job/{jobId}` | Applications for a job | — |
-| `PATCH` | `/applications/{id}/status` | Update status | `{status: pending\|reviewed\|accepted\|rejected}` |
-| `GET` | `/health` | Health check | — |
+| Method  | Path                        | Description            | Body                                                       |
+| ------- | --------------------------- | ---------------------- | ---------------------------------------------------------- |
+| `GET`   | `/applications/`            | List all applications  | —                                                          |
+| `POST`  | `/applications/`            | Submit an application  | `{job_id, applicant_name, applicant_email, cover_letter?}` |
+| `GET`   | `/applications/{id}`        | Get an application     | —                                                          |
+| `GET`   | `/applications/job/{jobId}` | Applications for a job | —                                                          |
+| `PATCH` | `/applications/{id}/status` | Update status          | `{status: pending\|reviewed\|accepted\|rejected}`          |
+| `GET`   | `/health`                   | Health check           | —                                                          |
 
 ---
 
@@ -217,6 +217,7 @@ trivy image jobboard-frontend:latest
 ```
 
 In your `SOLUTION.md`, answer:
+
 - How many CRITICAL CVEs did you find in total across all images?
 - Which image has the most vulnerabilities?
 - Pick **one** CRITICAL CVE and explain: (a) what it is, (b) which package it affects, (c) what the fix/mitigation is.
@@ -248,6 +249,7 @@ The provided `docker-compose.yml` is complete and working. Extend it with the fo
 #### 2.1 – Logging configuration (8 pts)
 
 Add a `logging` section to **every service** in `docker-compose.yml` that:
+
 - Uses the `json-file` log driver
 - Limits log files to `10m` max size
 - Keeps a maximum of `3` rotated log files
@@ -288,6 +290,7 @@ docker compose up --build 2>&1 | grep -E "healthy|started|Starting"
 Expected order: `postgres` (healthy) → `jobs-service` + `applications-service` (healthy) → `frontend` → `nginx`
 
 In `SOLUTION.md`:
+
 - Draw the dependency graph as ASCII art
 - Explain what `condition: service_healthy` does vs `condition: service_started`
 - What happens if postgres crashes after the other services are running? Verify with: `docker compose stop postgres`
@@ -332,6 +335,7 @@ docker volume ls
 ```
 
 In `SOLUTION.md`:
+
 - Where on the host machine is the data actually stored?
 - What is the difference between a **named volume** (`postgres-data:`) and a **bind mount** (`./data:/var/lib/postgresql/data`)?
 - When would you prefer each approach in production?
@@ -388,8 +392,9 @@ git push origin main
 ```
 
 Your pipeline must pass all these stages:
+
 - [ ] `lint-test-python` — Python linting passes
-- [ ] `lint-test-node` — Node.js dependency audit passes  
+- [ ] `lint-test-node` — Node.js dependency audit passes
 - [ ] `build-images` — all 4 images build successfully
 - [ ] `scan-images` — Trivy scans complete (exit-code 0, report generated)
 - [ ] `integration-test` — all API assertions pass
@@ -433,6 +438,7 @@ docker network inspect jobboard-network
 ```
 
 In `SOLUTION.md`:
+
 - List all containers on the network with their IP addresses
 - Explain how `jobs-service` resolves the hostname `postgres` (Docker's embedded DNS)
 - What happens if you try to reach `jobs-service:8000` from your browser directly? Why?
@@ -461,6 +467,7 @@ Browser → POST http://localhost/api/applications/
 ```
 
 Include:
+
 1. Which nginx `location` block matches
 2. What the `rewrite` rule transforms the path to
 3. Which upstream container receives the request and on which port
@@ -498,6 +505,7 @@ postgres:
 #### 6.2 – Add Content Security Policy headers (5 pts)
 
 Update `nginx/nginx.conf` to add a `Content-Security-Policy` header that:
+
 - Allows scripts only from `self`
 - Allows styles from `self` and inline
 - Blocks all `frame-ancestors`
@@ -528,15 +536,15 @@ Submit your repository link via the course portal.
 
 ## Grading Rubric
 
-| Task | Max Points | Criteria |
-|------|-----------|----------|
-| Task 1 — Dockerfile Hardening | 20 | Trivy scan completed, CVE explained, Dockerfile improvements applied and documented |
-| Task 2 — Docker Compose | 25 | Logging, env isolation, restart/dependency ordering all working and explained |
-| Task 3 — Persistence & Backup | 15 | Data survives restart, volume inspection done, backup/restore commands correct |
-| Task 4 — CI/CD Pipeline | 25 | Pipeline runs end-to-end, images pushed to Docker Hub, unit tests written |
-| Task 5 — Networking | 10 | Network analysis complete, inter-service comms verified, nginx routing traced |
-| Task 6 — Security (Bonus) | 10 | Docker secrets implemented, CSP headers added |
-| **Total** | **105** | |
+| Task                          | Max Points | Criteria                                                                            |
+| ----------------------------- | ---------- | ----------------------------------------------------------------------------------- |
+| Task 1 — Dockerfile Hardening | 20         | Trivy scan completed, CVE explained, Dockerfile improvements applied and documented |
+| Task 2 — Docker Compose       | 25         | Logging, env isolation, restart/dependency ordering all working and explained       |
+| Task 3 — Persistence & Backup | 15         | Data survives restart, volume inspection done, backup/restore commands correct      |
+| Task 4 — CI/CD Pipeline       | 25         | Pipeline runs end-to-end, images pushed to Docker Hub, unit tests written           |
+| Task 5 — Networking           | 10         | Network analysis complete, inter-service comms verified, nginx routing traced       |
+| Task 6 — Security (Bonus)     | 10         | Docker secrets implemented, CSP headers added                                       |
+| **Total**                     | **105**    |                                                                                     |
 
 ---
 
@@ -568,14 +576,38 @@ docker compose down -v --rmi all
 
 ## Common Issues
 
-| Symptom | Likely Cause | Fix |
-|---------|-------------|-----|
-| `jobs-service` exits immediately | DB not ready yet | Check `depends_on` + `healthcheck` in compose |
-| `502 Bad Gateway` from nginx | Upstream service not started | `docker compose logs nginx` and the failing upstream |
-| `connection refused` to postgres | Wrong `DATABASE_URL` | Verify `.env` values match service names |
-| Frontend shows "Could not reach" | `jobs-service` unhealthy | `docker compose ps` and check health status |
-| Port 80 already in use | Another process on port 80 | Change `NGINX_PORT` in `.env` to e.g. `8080` |
+| Symptom                          | Likely Cause                 | Fix                                                  |
+| -------------------------------- | ---------------------------- | ---------------------------------------------------- |
+| `jobs-service` exits immediately | DB not ready yet             | Check `depends_on` + `healthcheck` in compose        |
+| `502 Bad Gateway` from nginx     | Upstream service not started | `docker compose logs nginx` and the failing upstream |
+| `connection refused` to postgres | Wrong `DATABASE_URL`         | Verify `.env` values match service names             |
+| Frontend shows "Could not reach" | `jobs-service` unhealthy     | `docker compose ps` and check health status          |
+| Port 80 already in use           | Another process on port 80   | Change `NGINX_PORT` in `.env` to e.g. `8080`         |
 
 ---
 
-*Good luck! Focus on understanding **why** each configuration decision is made, not just making it work. The `SOLUTION.md` explanations carry significant weight.*
+## Part 2 — Kubernetes Extension
+
+Once you have completed the Docker Compose lab above, continue with the **Kubernetes lab** in [`k8s/README-k8s.md`](k8s/README-k8s.md).
+
+The Kubernetes extension covers:
+
+| Topic                                           | Manifests                         |
+| ----------------------------------------------- | --------------------------------- |
+| Namespace, Secrets, PersistentVolumeClaim       | `k8s/00–02`                       |
+| Deployments + ClusterIP Services (all services) | `k8s/03–05`                       |
+| Nginx Ingress with path rewriting               | `k8s/06-ingress.yaml`             |
+| HorizontalPodAutoscaler (CPU + memory)          | `k8s/07-hpa.yaml`                 |
+| Kubernetes Job for database seeding             | `k8s/08-seed-job.yaml`            |
+| NetworkPolicy, ConfigMap (student tasks)        | `k8s/09–10` (written by students) |
+
+Deploy the entire stack with a single command:
+
+```bash
+# After creating k8s/01-secret.yaml and loading images into minikube:
+kubectl apply -k k8s/
+```
+
+---
+
+_Good luck! Focus on understanding **why** each configuration decision is made, not just making it work. The `SOLUTION.md` explanations carry significant weight._
