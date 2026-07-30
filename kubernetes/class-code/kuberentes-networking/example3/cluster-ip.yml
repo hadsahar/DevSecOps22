@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  #type: ClusterIp
+  selector:
+    app: nginx
+  ports:
+    - port: 5456
+      targetPort: 80

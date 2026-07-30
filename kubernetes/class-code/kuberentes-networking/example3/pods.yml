@@ -1,0 +1,39 @@
+# 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-c
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: server
+      image: nginx
+      ports:
+       - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-b
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: server
+      image: nginx
+      ports:
+       - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-a
+spec:
+  containers:
+    - name: client
+      image: ubuntu
+      ports:
+       - containerPort: 81
+      command: ["sleep", "infinity"]

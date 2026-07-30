@@ -1,0 +1,29 @@
+# nginx - ubuntu 
+
+# __________________________
+# |                          |
+# |    ()                    |
+# |                          |
+# |            ()            |
+# |                          |
+# |__________________________|
+
+#|-_ >=
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container2container-pod
+spec:
+  containers:
+    - name: server
+      image: nginx
+      ports:
+       - containerPort: 80
+    - name: client
+      image: ubuntu
+      ports:
+       - containerPort: 81
+      command: ["sleep", "infinity"]

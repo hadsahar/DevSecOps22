@@ -1,0 +1,31 @@
+pipeline{
+    agent any
+    stages{
+        stage('clone'){
+            steps{
+                sh 'echo cloning this repo https://github.com/devopsPRO27/movies-api'
+                sh 'rm -fr movies-api'
+                sh 'git clone https://github.com/devopsPRO27/movies-api'
+                
+            }
+        }
+        stage('build'){
+            steps{
+               sh '''
+                    echo "trying to run the application"
+                    cd movies-api
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirments.txt
+                    python3 movies.py
+                '''
+            }
+        }
+        stage('deploy'){
+            steps{
+                sh 'echo if you see this than your pipeline is broken'
+            }
+        }
+        
+    }
+}

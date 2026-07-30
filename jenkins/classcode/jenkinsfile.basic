@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+    stages{
+        stage("clone the code"){
+            steps{
+                sh 'echo this stage is the cloning stage'
+            }
+        }
+        stage("build the code"){
+            steps{
+                sh 'echo this stage builds the code'
+            }
+        }
+        stage("test the code"){
+            steps{
+                sh 'echo this stage is for testing' 
+            }
+        }
+    }
+}
