@@ -1,11 +1,12 @@
 'use strict';
-
+const fs = require('fs');
 const { Pool } = require('pg');
 
+const password = encodeURIComponent(fs.readFileSync('/run/secrets/db_password', 'utf8').trim());
 const pool = new Pool({
   connectionString:
     process.env.DATABASE_URL ||
-    'postgresql://postgres:jobboard123@localhost:5432/jobboard',
+    'postgresql://postgres:' + password + '@postgres:5432/jobboard',
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,

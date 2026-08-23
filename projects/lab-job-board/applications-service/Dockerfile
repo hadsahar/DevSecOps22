@@ -1,5 +1,5 @@
 # ── Stage 1: install production dependencies ──────────────────
-FROM node:20-alpine AS deps
+FROM node@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 AS deps
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # ── Stage 2: lean runtime image ───────────────────────────────
-FROM node:20-alpine
+FROM node@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
 
 LABEL maintainer="DevSecOps Lab"
 LABEL service="applications-service"

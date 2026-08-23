@@ -1,5 +1,5 @@
 # ── Stage 1: dependency installation ──────────────────────────
-FROM python:3.12-slim AS builder
+FROM python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a AS builder
 
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # ── Stage 2: lean runtime image ───────────────────────────────
-FROM python:3.12-slim
+FROM python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a
 
 LABEL maintainer="DevSecOps Lab"
 LABEL service="jobs-service"

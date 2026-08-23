@@ -1,6 +1,9 @@
 # Environment
 .env
 
+#Sensitive files
+db_password.txt
+
 # Python
 __pycache__/
 *.pyc

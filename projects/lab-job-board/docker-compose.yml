@@ -7,7 +7,10 @@ services:
     environment:
       POSTGRES_DB:       ${POSTGRES_DB:-jobboard}
       POSTGRES_USER:     ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jobboard123}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      # POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    secrets:
+      - db_password
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./init-db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
@@ -20,6 +23,11 @@ services:
       retries: 5
       start_period: 10s
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -32,8 +40,8 @@ services:
       context: ./jobs-service
       dockerfile: Dockerfile
     container_name: jobs-service
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-jobboard123}@postgres:5432/${POSTGRES_DB:-jobboard}
+    #environment:
+      #DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD_FILE}@postgres:5432/${POSTGRES_DB:-jobboard}
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,11 +54,18 @@ services:
       retries: 3
       start_period: 20s
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
           cpus: "0.50"
           memory: 256M
+    secrets:
+      - db_password
 
   # ── Applications Microservice (Node.js / Express) ──────────────
   applications-service:
@@ -59,7 +74,7 @@ services:
       dockerfile: Dockerfile
     container_name: applications-service
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-jobboard123}@postgres:5432/${POSTGRES_DB:-jobboard}
+      #DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD_FILE}@postgres:5432/${POSTGRES_DB:-jobboard}
       PORT: 3001
     depends_on:
       postgres:
@@ -73,11 +88,18 @@ services:
       retries: 3
       start_period: 20s
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
           cpus: "0.50"
           memory: 256M
+    secrets:
+      - db_password
 
   # ── React Frontend ─────────────────────────────────────────────
   frontend:
@@ -93,6 +115,11 @@ services:
       applications-service:
         condition: service_healthy
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -106,7 +133,7 @@ services:
       dockerfile: Dockerfile
     container_name: nginx-proxy
     ports:
-      - "${NGINX_PORT:-80}:80"
+      - "${NGINX_PORT:-80}:8080"
     depends_on:
       - frontend
       - jobs-service
@@ -114,6 +141,11 @@ services:
     networks:
       - jobboard-network
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -131,3 +163,8 @@ networks:
   jobboard-network:
     driver: bridge
     name: jobboard-network
+
+# ───Secrets ─────────────────────────────────────────────────────
+secrets:
+  db_password:
+    file: ./db_password.txt

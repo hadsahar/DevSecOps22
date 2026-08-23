@@ -1,12 +1,10 @@
-import os
+import urllib.parse
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:jobboard123@localhost:5432/jobboard"
-)
 
+password = urllib.parse.quote(open('/run/secrets/db_password').read().strip())
+DATABASE_URL = "postgresql://postgres:" + password + "@postgres:5432/jobboard"
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
