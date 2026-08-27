@@ -272,5 +272,5 @@ Content-Security-Policy: script-src 'self'; style-src 'unsafe-inline' 'self'; fr
 **Application running at `http://localhost`:**
 ![App running](./localhost%20screenshot.png)
 
-**`docker compose ps` — all containers healthy:**
+**`docker compose ps` - all containers healthy:**
 ![docker compose ps](./Docker%20Compose%20PS%20screenshot.png)
