@@ -94,6 +94,17 @@ spec:
             runAsUser: 1000
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: db-password-secret
+              mountPath: /run/secrets
+              readOnly: true
+      volumes:
+        - name: db-password-secret
+          secret:
+            secretName: postgres-secret
+            items:
+              - key: POSTGRES_PASSWORD
+                path: db_password
 
 ---
 # ── 2. Service (ClusterIP) ────────────────────────────────────

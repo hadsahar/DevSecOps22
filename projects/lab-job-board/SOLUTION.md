@@ -192,6 +192,10 @@ MSYS_NO_PATHCONV=1 docker exec -it postgres-restore-test psql -U postgres -d job
 ```
 Remark: `MSYS_NO_PATHCONV=1` is Windows/Git Bash specific addition. it is unnecessary to run this command in other environments On Mac or Linux
 
+## Task 4 - CI/CD Pipeline with GitHub Actions
+
+Task 4 was removed from this assignment's README by the instructor (confirmed directly). Not attempted for that reason but will be resolved later.
+
 ## Task 5 - Networking & Service Communication
 ### Task 5.1 - Understand the Docker network
 **List all containers on the network with their IP addresses**
@@ -262,3 +266,11 @@ Content-Security-Policy: script-src 'self'; style-src 'unsafe-inline' 'self'; fr
 - script-src 'self' - only allow JS from the same origin.
 - style-src 'self' 'unsafe-inline' - CSS from same origin plus inline styles.
 - frame-ancestors 'none' - nobody can embed this page in an iframe, which is the main defense against clickjacking.
+
+## Screenshots
+
+**Application running at `http://localhost`:**
+![App running](./localhost%20screenshot.png)
+
+**`docker compose ps` — all containers healthy:**
+![docker compose ps](./Docker%20Compose%20PS%20screenshot.png)
